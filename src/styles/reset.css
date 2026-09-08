@@ -1,0 +1,28 @@
+/**
+ * Small supplemental reset on top of Tailwind's Preflight (already imported
+ * via `@import "tailwindcss"` in globals.css) — just the handful of things
+ * Preflight doesn't cover for this project.
+ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-primary-white);
+  color: var(--color-primary-black);
+  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

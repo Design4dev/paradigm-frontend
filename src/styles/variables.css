@@ -1,0 +1,33 @@
+/**
+ * Design tokens (design.md). Brand colors, fonts and radii are registered
+ * with Tailwind v4's `@theme` here so `bg-primary-red`, `text-heading-l`'s
+ * font, `rounded-[var(--radius-card)]`, etc. all resolve from one place —
+ * page-specific code should never invent new color/radius/type values.
+ */
+@theme {
+  --color-primary-red: #ef0d0d;
+  --color-primary-black: #030202;
+  --color-primary-white: #f0f0f0;
+  --color-secondary-red: #a6192e;
+  --color-accent-red-dark: #7a1723;
+  --color-dark-neutral: #1a1a1a;
+  --color-soft-gray: #eceded;
+  --color-surface: #ffffff;
+  --color-border: #e2e2e2;
+
+  --font-display: var(--font-montserrat), Arial, sans-serif;
+  --font-body: var(--font-open-sans), Arial, sans-serif;
+
+  /* Radius tokens — reused everywhere; avoid mixing extra radii. */
+  --radius-control: 8px;
+  --radius-card: 14px;
+}
+
+:root {
+  /* Motion tokens (design.md §6) — not part of Tailwind's color/radius
+     namespaces, kept as plain custom properties. */
+  --ease-out-standard: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-standard: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-micro: 200ms;
+  --duration-panel: 280ms;
+}

@@ -15,8 +15,19 @@ const openSans = Open_Sans({
   weight: ["400", "600"],
 });
 
+// `siteConfig.url` should always be a valid absolute URL, but a build must
+// never fail over a misconfigured env var (e.g. a bare domain with no
+// protocol) — fall back to localhost rather than let `new URL()` throw.
+function safeMetadataBase(url: string): URL {
+  try {
+    return new URL(url);
+  } catch {
+    return new URL("http://localhost:3000");
+  }
+}
+
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  metadataBase: safeMetadataBase(siteConfig.url),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
     template: `%s | ${siteConfig.name}`,

@@ -13,7 +13,10 @@ export const siteConfig = {
   tagline: "Southern Ontario's Trusted Commercial Vehicle Partner",
   description:
     "Sales, rentals, leasing/financing and custom upfitting for commercial vehicles across Hamilton and Southern Ontario. Browse work-ready vans, trucks and more and get a quote in minutes.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // `||` (not `??`) on purpose: an env var that's set but left blank on the
+  // host (empty string, not undefined) must still fall back — `??` only
+  // catches null/undefined and let `new URL("")` throw during the build.
+  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   location: "Hamilton, ON",
   contact: {
     phone: "(866) 331-3566",

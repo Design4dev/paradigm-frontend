@@ -10,6 +10,7 @@ import {
   CONDITIONS,
   MILEAGE_BUCKETS,
   PRICE_BUCKETS,
+  isAdvancedFiltered,
   vehicleLocations,
   vehicleMakes,
   vehicleTypes,
@@ -108,10 +109,17 @@ export function AdvancedSearchPanel({
     </div>
   );
 
+  // Before the visitor changes anything, every field is "Any" — technically
+  // that "matches" the whole real inventory, but showing e.g. "9 vehicles
+  // match" before any criteria were chosen reads as a fake/static count
+  // rather than the result of an actual search (page-01-homepage.md §8 —
+  // count must reflect real, deliberate filtering).
+  const hasFilters = isAdvancedFiltered(filters);
+
   const actions = (
     <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
       <p className="text-label-m text-dark-neutral/60" role="status" aria-live="polite">
-        {resultCount} {resultCount === 1 ? "vehicle matches" : "vehicles match"}
+        {hasFilters ? `${resultCount} ${resultCount === 1 ? "vehicle matches" : "vehicles match"}` : "Set filters to see matching vehicles"}
       </p>
       <div className="flex items-center gap-3">
         <Button type="button" variant="ghost" onClick={onClear}>

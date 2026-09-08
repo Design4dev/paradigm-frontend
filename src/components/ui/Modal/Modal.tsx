@@ -85,7 +85,14 @@ export function Dialog({
   if (!mounted || typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex" role="presentation">
+    // `pointer-events-none` whenever not fully open/entered: for up to
+    // 280ms after `isOpen` flips false, this stays mounted (mid exit
+    // transition) at opacity-0 — CSS opacity does NOT disable hit-testing,
+    // so without this an invisible-but-fully-clickable full-viewport layer
+    // would silently swallow every click on the page until the timeout
+    // unmounts it. This was the root cause of "can't click anything after
+    // closing Search/a modal."
+    <div className={cn("fixed inset-0 z-50 flex", !(isOpen && entered) && "pointer-events-none")} role="presentation">
       <div
         aria-hidden="true"
         onClick={onClose}

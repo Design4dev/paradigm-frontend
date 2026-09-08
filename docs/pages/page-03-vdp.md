@@ -5,6 +5,49 @@
 
 As-built documentation — see `docs/pages/page-01-homepage.md` and `docs/pages/page-02-vrp.md` for the sibling docs and their format.
 
+## Polish pass (visual-match + interaction fixes)
+
+- **Gallery whitespace**: the desktop grid (thumbnail rail + main image) now uses `items-center`
+  instead of the CSS grid default `stretch`, so a short thumbnail rail (only 3 photos per mock
+  vehicle) sits centered next to the taller main image instead of stretching into blank space
+  below the last thumbnail.
+- **"In Stock" pill**: the reference shows `available` specifically as a green "In Stock" pill,
+  distinct from the shared `AvailabilityBadge`'s black "Available Now" (still used for every other
+  status, and still used as-is by `/admin`) — `VehicleMeta` overrides just that one case locally.
+- **Price + "View Pricing Details"**: stacked (price, then the link directly under it) with a
+  tight, consistent gap, matching the reference and fixing the earlier "same row" placement.
+- **Section nav is now true tabs**, sticky just under the header (`top-[69px]`, matching the
+  collapsed header height) — clicking a tab swaps the panel below instantly rather than scrolling
+  to an anchor, and tablet/mobile's accordion shares the same active-section state via
+  `VdpSectionsProvider` so a cross-link (`VehiclePrice`'s "View Pricing Details") can jump to
+  Financing on either layout.
+- **Financing's payment estimator is expanded by default** — the price/rate/term fields are
+  visible immediately, no click required, while keeping the collapse toggle for anyone who wants
+  to hide it.
+- **Root-caused a site-wide "can't click anything after closing a modal" bug**: `Dialog`'s
+  backdrop/panel stay mounted for up to 280ms after `isOpen` flips false to finish their exit
+  transition, faded via `opacity-0` — but CSS opacity doesn't disable hit-testing, so that
+  invisible layer was still capturing every click on the page for that whole window. Fixed by
+  adding `pointer-events-none` to the dialog wrapper whenever it isn't fully open+entered.
+  `useLockBodyScroll` was also hardened into a reference-counted lock (rather than each instance
+  saving/restoring its own "original" `overflow` value), since two dialogs can legitimately be
+  open at once here (e.g. requesting a quote on a card shown inside the Search overlay) and a
+  non-LIFO close order would otherwise unlock scroll while the other dialog was still open.
+- **Search/Advanced Search now hand off to the real, filtered VRP** (`/vehicles?...`) instead of
+  only ever opening the in-page overlay — `advancedFiltersToVrpFilters` maps the Homepage's
+  free-text-friendly filter shape onto the VRP's `VrpFilters` (price buckets → min/max, free-text
+  `model` → `q` since the VRP's own Model field is an exact-match select), and the two pages now
+  share one `vrpFiltersToSearchParams` builder so this can't drift. This also meant giving the VRP
+  an `availability` filter it didn't have before (URL key `availability`, new sidebar Select) —
+  Advanced Search already offered that criterion, and dropping it silently on handoff would have
+  contradicted "don't ignore the selected filters." The Search overlay's own free-text results also
+  gained a "View All on Inventory" link carrying the query to `/vehicles?q=...`.
+- **Advanced Search's match count no longer shows a number before any filter is touched.** Every
+  field defaulting to "Any" technically "matches" the whole dataset, but surfacing e.g. "9 vehicles
+  match" before the visitor picked anything read as a fake/static count; it now shows "Set filters
+  to see matching vehicles" until at least one field changes (`isAdvancedFiltered`), then the real
+  count — including a correct "0 vehicles match" for a combination with no results.
+
 ## Architecture
 
 `page.tsx` is a server component: it looks up the vehicle once from the typed mock repository

@@ -9,6 +9,7 @@ import { Dialog } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import {
   advancedSearchVehicles,
+  getAllVehicles,
   searchVehicles,
   vehicleTypes,
   type AdvancedSearchFilters,
@@ -42,6 +43,10 @@ export function SearchOverlay() {
 
   const trimmed = query.trim();
   const isIdle = trimmed.length === 0 && !activeFilters;
+  // Real current inventory, shown immediately on open rather than leaving
+  // the overlay empty until the visitor types something (the request
+  // said the search state must never look empty/non-functional).
+  const defaultResults = getAllVehicles();
 
   useEffect(() => {
     if (!isOpen || isIdle || activeFilters) return;
@@ -136,19 +141,26 @@ export function SearchOverlay() {
 
         <div className="container-page flex-1 overflow-y-auto py-8">
           {isIdle && (
-            <div>
-              <p className="text-label-m mb-3 text-dark-neutral/60">Browse by type</p>
-              <div className="flex flex-wrap gap-2">
-                {vehicleTypes.map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setQuery(type)}
-                    className="focus-ring text-label-m rounded-full border border-border px-4 py-2 text-primary-black transition-colors duration-[var(--duration-micro)] hover:border-primary-red hover:text-primary-red"
-                  >
-                    {type}
-                  </button>
-                ))}
+            <div className="flex flex-col gap-8">
+              <div>
+                <p className="text-label-m mb-3 text-dark-neutral/60">Browse by type</p>
+                <div className="flex flex-wrap gap-2">
+                  {vehicleTypes.map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => setQuery(type)}
+                      className="focus-ring text-label-m rounded-full border border-border px-4 py-2 text-primary-black transition-colors duration-[var(--duration-micro)] hover:border-primary-red hover:text-primary-red"
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-label-m mb-4 text-dark-neutral/60">All current inventory</p>
+                <SearchResults results={defaultResults} />
               </div>
             </div>
           )}
@@ -175,7 +187,7 @@ export function SearchOverlay() {
             </div>
           )}
 
-          {!isIdle && asyncStatus === "results" && <SearchResults results={results} />}
+          {!isIdle && asyncStatus === "results" && <SearchResults results={results} query={activeFilters ? undefined : query} />}
 
           {!isIdle && asyncStatus === "empty" && <SearchEmpty query={query} onClear={activeFilters ? clearFilters : () => setQuery("")} />}
 

@@ -6,6 +6,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import {
+  AVAILABILITY_OPTIONS,
   MILEAGE_BUCKETS,
   VRP_CATEGORIES,
   getVehicleModels,
@@ -170,6 +171,13 @@ export function VrpFilterSidebar({
         options={toOptions(vehicleLocations, "Any Location")}
         value={draft.location}
         onChange={(event) => onChange({ location: event.target.value })}
+      />
+
+      <Select
+        label="Availability"
+        options={AVAILABILITY_OPTIONS.map((option) => ({ label: option.label, value: option.value }))}
+        value={draft.availability}
+        onChange={(event) => onChange({ availability: event.target.value })}
       />
 
       <fieldset>

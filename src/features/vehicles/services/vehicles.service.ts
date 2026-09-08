@@ -671,6 +671,21 @@ export const EMPTY_ADVANCED_FILTERS: AdvancedSearchFilters = {
   availability: "Any",
 };
 
+/** True once the visitor has actually changed at least one field from its default — distinguishes "no search yet" from "0 results". */
+export function isAdvancedFiltered(filters: AdvancedSearchFilters): boolean {
+  return (
+    filters.type !== "Any" ||
+    filters.make !== "Any" ||
+    filters.model.trim() !== "" ||
+    filters.year !== "Any" ||
+    filters.price !== "Any" ||
+    filters.mileage !== "Any" ||
+    filters.condition !== "Any" ||
+    filters.location !== "Any" ||
+    filters.availability !== "Any"
+  );
+}
+
 /** Full Advanced Search filter set (page-01-homepage.md §8). */
 export function advancedSearchVehicles(filters: AdvancedSearchFilters): Vehicle[] {
   return vehicles.filter((vehicle) => {
@@ -735,6 +750,8 @@ export interface VrpFilters {
   mileage: string;
   location: string;
   conditions: string[];
+  /** Reuses AVAILABILITY_OPTIONS' values so the Homepage's Advanced Search can hand off to the VRP without losing this criterion. */
+  availability: string;
 }
 
 export const EMPTY_VRP_FILTERS: VrpFilters = {
@@ -749,6 +766,7 @@ export const EMPTY_VRP_FILTERS: VrpFilters = {
   mileage: "Any",
   location: "Any",
   conditions: [],
+  availability: "Any",
 };
 
 export function isVrpFiltered(filters: VrpFilters): boolean {
@@ -763,7 +781,8 @@ export function isVrpFiltered(filters: VrpFilters): boolean {
     filters.priceMax.trim() !== "" ||
     filters.mileage !== "Any" ||
     filters.location !== "Any" ||
-    filters.conditions.length > 0
+    filters.conditions.length > 0 ||
+    filters.availability !== "Any"
   );
 }
 
@@ -812,6 +831,7 @@ export function filterVehiclesForVrp(filters: VrpFilters): Vehicle[] {
     if (priceMin !== null && vehicle.price < priceMin) return false;
     if (priceMax !== null && vehicle.price > priceMax) return false;
     if (filters.location !== "Any" && vehicle.location !== filters.location) return false;
+    if (filters.availability !== "Any" && vehicle.availability !== filters.availability) return false;
     if (filters.conditions.length > 0) {
       const condition = vehicle.isNew ? "New" : "Used";
       if (!filters.conditions.includes(condition)) return false;
@@ -825,6 +845,64 @@ export function filterVehiclesForVrp(filters: VrpFilters): Vehicle[] {
     }
     return true;
   });
+}
+
+/**
+ * Builds the VRP's URL query string from a `VrpFilters` object — the one
+ * shared place this mapping exists, used both by the VRP page itself
+ * (VrpPageClient) and by the Homepage's Buy search / Advanced Search when
+ * they hand off to `/vehicles` (page-02-vrp.md §10, page-01-homepage.md
+ * §8 — "search + filters must land on real, filtered results, not a
+ * generic listing").
+ */
+export function vrpFiltersToSearchParams(filters: VrpFilters): URLSearchParams {
+  const params = new URLSearchParams();
+  if (filters.q.trim()) params.set("q", filters.q.trim());
+  if (filters.types.length) params.set("type", filters.types.join(","));
+  if (filters.make !== "Any") params.set("make", filters.make);
+  if (filters.model !== "Any") params.set("model", filters.model);
+  if (filters.yearMin.trim()) params.set("yearMin", filters.yearMin.trim());
+  if (filters.yearMax.trim()) params.set("yearMax", filters.yearMax.trim());
+  if (filters.priceMin.trim()) params.set("priceMin", filters.priceMin.trim());
+  if (filters.priceMax.trim()) params.set("priceMax", filters.priceMax.trim());
+  if (filters.mileage !== "Any") params.set("mileage", filters.mileage);
+  if (filters.location !== "Any") params.set("location", filters.location);
+  if (filters.conditions.length) params.set("condition", filters.conditions.join(","));
+  if (filters.availability !== "Any") params.set("availability", filters.availability);
+  return params;
+}
+
+/**
+ * Maps the Homepage's free-text-friendly `AdvancedSearchFilters` onto the
+ * VRP's stricter `VrpFilters` shape. `model` is free text there (partial
+ * match) but an exact dropdown on the VRP, so it's carried over as the
+ * free-text `q` instead of `model` to avoid a value the VRP's own Model
+ * select wouldn't recognize. Price buckets are converted to the equivalent
+ * min/max the VRP already understands.
+ */
+export function advancedFiltersToVrpFilters(filters: AdvancedSearchFilters): VrpFilters {
+  const priceRange: { priceMin: string; priceMax: string } =
+    filters.price === "under-40000"
+      ? { priceMin: "", priceMax: "39999" }
+      : filters.price === "40000-60000"
+        ? { priceMin: "40000", priceMax: "60000" }
+        : filters.price === "over-60000"
+          ? { priceMin: "60001", priceMax: "" }
+          : { priceMin: "", priceMax: "" };
+
+  return {
+    ...EMPTY_VRP_FILTERS,
+    q: filters.model.trim(),
+    types: filters.type !== "Any" ? [filters.type] : [],
+    make: filters.make,
+    yearMin: filters.year !== "Any" ? filters.year : "",
+    yearMax: filters.year !== "Any" ? filters.year : "",
+    ...priceRange,
+    mileage: filters.mileage,
+    location: filters.location,
+    conditions: filters.condition !== "Any" ? [filters.condition] : [],
+    availability: filters.availability,
+  };
 }
 
 export const VRP_SORT_OPTIONS = [

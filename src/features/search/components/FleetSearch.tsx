@@ -8,10 +8,12 @@ import { AdvancedSearchPanel } from "@/features/search/components/AdvancedSearch
 import { useSearch } from "@/features/search/components/SearchProvider";
 import {
   EMPTY_ADVANCED_FILTERS,
+  advancedFiltersToVrpFilters,
   advancedSearchVehicles,
   vehicleLocations,
   vehicleMakes,
   vehicleTypes,
+  vrpFiltersToSearchParams,
   type AdvancedSearchFilters,
 } from "@/features/vehicles/services/vehicles.service";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -63,9 +65,16 @@ export function FleetSearch() {
 
   const resultCount = advancedSearchVehicles(advancedFilters).length;
 
+  /** Navigates to the real, filtered Vehicle Listing (VRP) — never a generic listing that ignores the selection. */
+  const goToListing = (filters: AdvancedSearchFilters) => {
+    const params = vrpFiltersToSearchParams(advancedFiltersToVrpFilters(filters));
+    const query = params.toString();
+    router.push(query ? `/vehicles?${query}` : "/vehicles");
+  };
+
   const submitBuy = (event: React.FormEvent) => {
     event.preventDefault();
-    openSearch(undefined, searchButtonRef.current, { ...EMPTY_ADVANCED_FILTERS, type, make, location });
+    goToListing({ ...EMPTY_ADVANCED_FILTERS, type, make, location });
   };
 
   const submitRent = (event: React.FormEvent) => {
@@ -75,7 +84,7 @@ export function FleetSearch() {
 
   const applyAdvanced = () => {
     setAdvancedOpen(false);
-    openSearch(undefined, advancedTriggerRef.current, advancedFilters);
+    goToListing(advancedFilters);
   };
 
   const clearAdvanced = () => setAdvancedFilters(EMPTY_ADVANCED_FILTERS);

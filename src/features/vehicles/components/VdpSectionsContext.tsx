@@ -3,20 +3,21 @@
 import { createContext, useContext, useMemo, useState } from "react";
 
 interface VdpSectionsContextValue {
+  /** Which tab-nav section is currently active — driven by scroll-spy on desktop, by the open accordion row on tablet/mobile. */
   activeId: string | null;
   setActiveId: (id: string | null) => void;
-  /** Sets the active section and scrolls the section nav into view — for cross-links outside the nav itself (e.g. "View Pricing Details"). */
-  goToSection: (id: string) => void;
+  /** Smoothly scrolls any element by id into view — used by tab clicks and by cross-links (e.g. VehiclePrice's "View Pricing Details" → the standalone Financing section, which isn't a tab at all). */
+  scrollToSection: (id: string) => void;
 }
 
 const VdpSectionsContext = createContext<VdpSectionsContextValue | null>(null);
 
 /**
- * Shares "which VDP section is active" between `VehicleSectionNav` (desktop
- * tabs / tablet-mobile accordion) and cross-links elsewhere on the page
- * (VehiclePrice's "View Pricing Details" → Financing) so both can drive the
- * same state instead of relying on anchor scrolling, which stopped working
- * once the desktop nav switched from "scroll to section" to true tabs.
+ * Shares "which VDP tab section is active" between `VehicleSectionNav`
+ * (desktop scroll-spy tabs / tablet-mobile accordion) and cross-links
+ * elsewhere on the page, and exposes one shared smooth-scroll helper so
+ * every "jump to a section" action behaves identically (accounting for the
+ * sticky nav's height via each section's own `scroll-mt-*`).
  */
 export function VdpSectionsProvider({ defaultId, children }: { defaultId: string; children: React.ReactNode }) {
   const [activeId, setActiveId] = useState<string | null>(defaultId);
@@ -25,9 +26,8 @@ export function VdpSectionsProvider({ defaultId, children }: { defaultId: string
     () => ({
       activeId,
       setActiveId,
-      goToSection: (id) => {
-        setActiveId(id);
-        document.getElementById("vdp-sections")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrollToSection: (id) => {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
       },
     }),
     [activeId]

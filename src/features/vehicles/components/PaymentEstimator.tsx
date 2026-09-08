@@ -44,6 +44,7 @@ export function PaymentEstimator({ vehicle }: { vehicle: Vehicle }) {
 
   return (
     <div className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-border bg-soft-gray p-6">
+      <h3 className="text-heading-m">Estimate Your Payment</h3>
       <Input label="Vehicle Price" value={vehicle.priceLabel} readOnly tabIndex={-1} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Input

@@ -114,7 +114,7 @@ export function VehicleGallery({
           onKeyDown={handleKeyDown}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="focus-ring relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-card)] bg-soft-gray sm:aspect-[16/10]"
+          className="focus-ring relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-card)] bg-soft-gray sm:aspect-[3/2] lg:aspect-[4/3]"
         >
           {activeStatus !== "failed" ? (
             <>

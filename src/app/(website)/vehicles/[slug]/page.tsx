@@ -95,13 +95,15 @@ export default async function VehicleDetailPage({ params }: VehiclePageProps) {
 
   const vehicleName = `${vehicle.year} ${vehicle.brand} ${vehicle.model}`;
 
+  // Financing is intentionally NOT one of these — it's a standalone section
+  // below the tab block, not a tab (per the reference: no hidden calculator
+  // behind an extra click, and it shouldn't compete with the tab strip).
   const sections: VdpSection[] = [
     { id: "overview", label: "Overview", content: <VehicleOverview vehicle={vehicle} /> },
     { id: "specifications", label: "Specifications", content: <VehicleSpecs vehicle={vehicle} /> },
     { id: "features", label: "Features", content: <VehicleKeyFeatures vehicle={vehicle} /> },
     { id: "gallery", label: "Gallery", content: <VehicleGallerySection images={vehicle.images} vehicleName={vehicleName} /> },
     { id: "warranty", label: "Warranty & Protection", content: <VehicleWarranty /> },
-    { id: "financing", label: "Financing", content: <VehicleFinancing vehicle={vehicle} /> },
     { id: "related-vehicles", label: "Related Vehicles", content: <RelatedVehicles slug={vehicle.slug} /> },
   ];
 
@@ -115,7 +117,7 @@ export default async function VehicleDetailPage({ params }: VehiclePageProps) {
           <VdpBreadcrumb vehicle={vehicle} />
         </div>
 
-        <div className="container-page grid grid-cols-1 gap-10 py-8 sm:py-10 lg:grid-cols-[1.3fr_1fr] lg:gap-14 lg:py-12">
+        <div className="container-page grid grid-cols-1 gap-10 py-8 sm:py-10 lg:grid-cols-[1.3fr_1fr] lg:items-start lg:gap-14 lg:py-12">
           <VehicleGallery images={vehicle.images} vehicleName={vehicleName} has360Tour={vehicle.has360Tour} />
           <VehicleSummary vehicle={vehicle} />
         </div>
@@ -126,6 +128,10 @@ export default async function VehicleDetailPage({ params }: VehiclePageProps) {
 
         <div className="container-page pt-10 pb-16">
           <VehicleSectionNav sections={sections} />
+        </div>
+
+        <div id="financing" className="container-page scroll-mt-[152px] pb-16">
+          <VehicleFinancing vehicle={vehicle} />
         </div>
 
         <StickyMobileCTA vehicle={vehicle} />

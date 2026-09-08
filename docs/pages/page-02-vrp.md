@@ -38,7 +38,13 @@ immediately. Both read/write the same `VrpFilters` shape, so the category strip 
 Vehicle Type checkboxes can never disagree about what's selected.
 
 URL keys: `q`, `type` (comma-separated), `make`, `model`, `yearMin`/`yearMax`, `priceMin`/`priceMax`,
-`mileage`, `location`, `condition` (comma-separated), `sort`, `view`, `page`.
+`mileage`, `location`, `availability`, `condition` (comma-separated), `sort`, `view`, `page`.
+
+`availability` (added when the VDP work connected the Homepage's Advanced Search to this page —
+see `docs/pages/page-03-vdp.md`) reuses `AVAILABILITY_OPTIONS`' values and lives in the sidebar
+alongside Location. The URL-building logic (`vrpFiltersToSearchParams` in `vehicles.service.ts`) is
+now shared with the Homepage's search/advanced-search handoff rather than living only in
+`VrpPageClient`, so the two can never drift apart.
 
 ## Deliberate simplifications (and why)
 

@@ -19,6 +19,7 @@ import {
   getVehicleTypeCounts,
   isVrpFiltered,
   sortVehiclesForVrp,
+  vrpFiltersToSearchParams,
   type VrpFilters,
   type VrpSort,
 } from "@/features/vehicles/services/vehicles.service";
@@ -35,18 +36,7 @@ export interface VrpInitialState {
 }
 
 function buildSearch(filters: VrpFilters, sort: VrpSort, view: "grid" | "list", page: number): string {
-  const params = new URLSearchParams();
-  if (filters.q.trim()) params.set("q", filters.q.trim());
-  if (filters.types.length) params.set("type", filters.types.join(","));
-  if (filters.make !== "Any") params.set("make", filters.make);
-  if (filters.model !== "Any") params.set("model", filters.model);
-  if (filters.yearMin.trim()) params.set("yearMin", filters.yearMin.trim());
-  if (filters.yearMax.trim()) params.set("yearMax", filters.yearMax.trim());
-  if (filters.priceMin.trim()) params.set("priceMin", filters.priceMin.trim());
-  if (filters.priceMax.trim()) params.set("priceMax", filters.priceMax.trim());
-  if (filters.mileage !== "Any") params.set("mileage", filters.mileage);
-  if (filters.location !== "Any") params.set("location", filters.location);
-  if (filters.conditions.length) params.set("condition", filters.conditions.join(","));
+  const params = vrpFiltersToSearchParams(filters);
   if (sort !== "newest") params.set("sort", sort);
   if (view !== "grid") params.set("view", view);
   if (page !== 1) params.set("page", String(page));
@@ -142,6 +132,7 @@ export function VrpPageClient({ initial }: { initial: VrpInitialState }) {
     (draftFilters.model !== "Any" ? 1 : 0) +
     (draftFilters.location !== "Any" ? 1 : 0) +
     (draftFilters.mileage !== "Any" ? 1 : 0) +
+    (draftFilters.availability !== "Any" ? 1 : 0) +
     (draftFilters.yearMin || draftFilters.yearMax ? 1 : 0) +
     (draftFilters.priceMin || draftFilters.priceMax ? 1 : 0);
 

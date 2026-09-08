@@ -1,5 +1,6 @@
 "use client";
 
+import { AvailabilityBadge } from "@/components/ui/Badge";
 import { ImageOffIcon, SpecIcon, ThumbsUpIcon } from "@/components/ui/Icons";
 import { useQuote } from "@/features/leads/components/QuoteProvider";
 import { cn } from "@/lib/utils";
@@ -75,6 +76,8 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
           </Link>
           <span className="text-heading-m shrink-0 text-primary-red">{vehicle.priceLabel}</span>
         </div>
+
+        <AvailabilityBadge status={vehicle.availability} className="w-fit" />
 
         <ul className="text-caption-s flex flex-wrap items-center gap-x-3 gap-y-1.5 text-dark-neutral/60">
           {cardSpecs.map((spec) => (

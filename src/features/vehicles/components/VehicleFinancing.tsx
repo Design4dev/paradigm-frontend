@@ -1,15 +1,13 @@
-"use client";
-
-import { Button } from "@/components/ui/Button";
 import { PaymentEstimator } from "@/features/vehicles/components/PaymentEstimator";
 import type { Vehicle } from "@/features/vehicles/types/vehicle.types";
 import Link from "next/link";
-import { useState } from "react";
 
-/** Financing section (page-03-vdp.md §17) — connects to a real inline calculator rather than a disconnected one. */
+/**
+ * Financing — a standalone VDP section (not one of the tab-nav sections)
+ * per the reference's request that it stand on its own. The payment
+ * estimator always renders, no click required to reveal it.
+ */
 export function VehicleFinancing({ vehicle }: { vehicle: Vehicle }) {
-  const [showCalculator, setShowCalculator] = useState(false);
-
   return (
     <section aria-labelledby="financing-heading" className="flex flex-col gap-5">
       <h2 id="financing-heading" className="text-heading-l">
@@ -20,16 +18,11 @@ export function VehicleFinancing({ vehicle }: { vehicle: Vehicle }) {
         owner-operator purchases. Estimate a monthly payment below, or talk to our team about a tailored quote.
       </p>
 
-      <div className="flex flex-wrap items-center gap-4">
-        <Link href="/services#leasing-financing" className="focus-ring text-label-m rounded text-primary-red hover:underline">
-          View Financing Options →
-        </Link>
-        <Button variant="secondary" onClick={() => setShowCalculator((value) => !value)} aria-expanded={showCalculator}>
-          {showCalculator ? "Hide Estimate Payments" : "Estimate Payments →"}
-        </Button>
-      </div>
+      <Link href="/services#leasing-financing" className="focus-ring text-label-m w-fit rounded text-primary-red hover:underline">
+        View Financing Options →
+      </Link>
 
-      {showCalculator && <PaymentEstimator vehicle={vehicle} />}
+      <PaymentEstimator vehicle={vehicle} />
     </section>
   );
 }

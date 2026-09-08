@@ -33,6 +33,7 @@ function filtersFromSearchParams(params: Record<string, string | string[] | unde
     mileage: firstValue(params.mileage) ?? EMPTY_VRP_FILTERS.mileage,
     location: firstValue(params.location) ?? EMPTY_VRP_FILTERS.location,
     conditions: csv(params.condition),
+    availability: firstValue(params.availability) ?? EMPTY_VRP_FILTERS.availability,
   };
 }
 

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export function Hero() {
   return (
-    <section className="relative bg-primary-black">
+    <section className="relative bg-primary-black/70">
       {/* Background image/gradient get their own clipped layer instead of overflow-hidden on the whole section — the Global Search dropdown lives in this section too and needs to be able to extend past the section's bottom edge (over the next landing-page section) without being clipped. */}
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <Image
@@ -15,9 +15,9 @@ export function Hero() {
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-60"
+          className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-black via-primary-black/70 to-primary-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-black/70 via-primary-black/40 to-primary-black/20" />
       </div>
 
       <div className="container-page relative flex flex-col gap-8 py-16 sm:py-24 lg:py-28">

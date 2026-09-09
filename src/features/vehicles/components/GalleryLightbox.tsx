@@ -115,7 +115,7 @@ export function GalleryLightbox({
                   i === index ? "border-primary-red" : "border-transparent opacity-60 hover:opacity-100"
                 )}
               >
-                <Image src={image.url} alt="" fill sizes="80px" className="object-cover" />
+                <Image src={image.url} alt="" fill sizes="80px" className="object-contain p-1" />
               </button>
             ))}
           </div>

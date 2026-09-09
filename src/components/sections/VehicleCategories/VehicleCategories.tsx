@@ -27,7 +27,7 @@ const CATEGORIES = [
     label: "Service Trucks",
     body: "Built for hard work.",
     query: "Service+Truck",
-    image: categoryImage(PHOTO_IDS.categoryTrucks),
+    image: categoryImage(PHOTO_IDS.categoryServiceTrucks),
   },
   {
     label: "Pickup Trucks",
@@ -75,7 +75,7 @@ export function VehicleCategories() {
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 220px, 45vw"
-                className="object-cover transition-transform duration-300 ease-[var(--ease-out-standard)] group-hover:scale-105"
+                className="object-contain p-3 transition-transform duration-300 ease-[var(--ease-out-standard)] group-hover:scale-105"
               />
             </div>
             <div className="flex flex-1 flex-col gap-1 p-3.5">

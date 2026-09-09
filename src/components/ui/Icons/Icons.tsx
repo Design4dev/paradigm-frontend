@@ -1,122 +1,236 @@
-import Image from "next/image";
+import {
+  AlertTriangle,
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  Car,
+  Check,
+  ClipboardList,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Cog,
+  Filter,
+  Fuel,
+  Gauge,
+  Hash,
+  Heart,
+  ImageOff,
+  Info,
+  LayoutGrid,
+  List,
+  Loader2,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Menu,
+  Palette,
+  Pause,
+  Phone,
+  Play,
+  RefreshCw,
+  Ruler,
+  Search,
+  SearchX,
+  Share2,
+  ShieldCheck,
+  Star,
+  ThumbsUp,
+  Truck,
+  Upload,
+  Users,
+  Wrench,
+  X,
+  XCircle,
+  type LucideProps,
+} from "lucide-react";
 import type { SpecIconName } from "@/features/vehicles/types/vehicle.types";
 
 /**
- * Icons are pre-rendered PNG files under public/images/icons/ (generated
- * once from the original vector artwork) rather than inline SVG — every
- * icon below is a thin wrapper around next/image so call sites are
- * unchanged (className, size via Tailwind h-N and w-N utilities, etc.). All icons are
- * decorative; the interactive control around them carries the real label.
+ * Icon system: production-ready SVG icons from `lucide-react`, chosen per
+ * icon for what it actually represents (search → magnifying glass, phone →
+ * handset, wrench → service, etc.) rather than filling space decoratively.
+ * Every icon below is `currentColor`-based, so a wrapping `text-*` class
+ * (or an explicit `tone`/`color` prop on the handful that need one
+ * regardless of ambient context) controls it directly — no baked-color
+ * file variants needed. All icons are decorative (`aria-hidden`); the
+ * interactive control around them carries the real accessible label.
  */
 export interface IconProps {
   className?: string;
 }
 
-function icon(src: string, extraClassName?: string) {
+const DEFAULT_SIZE = 20;
+const DEFAULT_STROKE = 1.75;
+
+function icon(Lucide: React.ComponentType<LucideProps>) {
   function IconComponent({ className }: IconProps) {
-    const classes = extraClassName ? `${extraClassName} ${className ?? ""}`.trim() : className;
-    return <Image src={src} alt="" width={64} height={64} aria-hidden="true" className={classes} />;
+    return <Lucide aria-hidden="true" size={DEFAULT_SIZE} strokeWidth={DEFAULT_STROKE} className={className} />;
   }
   return IconComponent;
 }
 
-export const SearchIcon = icon("/images/icons/search-icon.png");
-export const MenuIcon = icon("/images/icons/menu-icon.png");
-export const CloseIcon = icon("/images/icons/close-icon.png");
-export const ChevronRightIcon = icon("/images/icons/chevron-right-icon.png");
-export const ChevronLeftIcon = icon("/images/icons/chevron-left-icon.png");
-export const MapPinIcon = icon("/images/icons/map-pin-icon.png");
-export const CalendarIcon = icon("/images/icons/calendar-icon.png");
-export const CheckIcon = icon("/images/icons/check-icon.png");
-export const CheckCircleIcon = icon("/images/icons/check-circle-icon.png");
-export const AlertIcon = icon("/images/icons/alert-icon.png");
-export const StarIcon = icon("/images/icons/star-icon.png");
-export const ThumbsUpIconOutline = icon("/images/icons/thumbs-up-icon.png");
-export const ThumbsUpIconFilled = icon("/images/icons/thumbs-up-icon-red.png");
-export const ImageOffIcon = icon("/images/icons/image-off-icon.png");
-const PhoneIconRed = icon("/images/icons/phone-icon.png");
-const PhoneIconWhite = icon("/images/icons/phone-icon-white.png");
+export const SearchIcon = icon(Search);
+export const MenuIcon = icon(Menu);
+export const CloseIcon = icon(X);
+export const ChevronRightIcon = icon(ChevronRight);
+export const ChevronLeftIcon = icon(ChevronLeft);
+export const MapPinIcon = icon(MapPin);
+export const CalendarIcon = icon(Calendar);
+export const CheckIcon = icon(Check);
+export const CheckCircleIcon = icon(CheckCircle2);
+export const AlertIcon = icon(AlertTriangle);
+export const StarIcon = icon(Star);
+export const ImageOffIcon = icon(ImageOff);
+export const MailIcon = icon(Mail);
+export const ShareIcon = icon(Share2);
+export const GaugeIcon = icon(Gauge);
+export const FuelIcon = icon(Fuel);
+export const SeatsIcon = icon(Users);
+export const BodyIcon = icon(Car);
+export const DrivetrainIcon = icon(Cog);
+export const DimensionsIcon = icon(Ruler);
+export const EngineIcon = icon(Cog);
+export const VehicleTypeIcon = icon(Truck);
+export const ShieldIcon = icon(ShieldCheck);
+export const WrenchIcon = icon(Wrench);
+export const TagIcon = icon(Hash);
+export const SwatchIcon = icon(Palette);
+export const ResourceIcon = icon(BookOpen);
+export const ClipboardIcon = icon(ClipboardList);
+export const NoResultsIcon = icon(SearchX);
+export const InfoIcon = icon(Info);
+export const ErrorIcon = icon(XCircle);
+export const PauseIcon = icon(Pause);
+export const PlayIcon = icon(Play);
+export const UploadIcon = icon(Upload);
+export const RetryIcon = icon(RefreshCw);
 
 /**
- * Baked red by default — invisible on a red background. `tone="white"`
- * swaps to an explicit white-recolored file rather than relying on CSS
- * color inheritance (which raster icons don't support).
+ * Social brand marks — `lucide-react` dropped its brand-icon set some
+ * versions back, so these are hand-drawn to the same 24x24/stroke-1.75
+ * geometry as every other icon here (not raster) so they stay crisp at any
+ * size and pick up `currentColor` like the rest of the system.
  */
-export function PhoneIcon({ className, tone = "red" }: IconProps & { tone?: "red" | "white" }) {
-  const Icon = tone === "white" ? PhoneIconWhite : PhoneIconRed;
-  return <Icon className={className} />;
-}
-export const MailIcon = icon("/images/icons/mail-icon.png");
-export const ShareIcon = icon("/images/icons/share-icon.png");
-export const GaugeIcon = icon("/images/icons/gauge-icon.png");
-export const FuelIcon = icon("/images/icons/fuel-icon.png");
-export const SeatsIcon = icon("/images/icons/seats-icon.png");
-export const BodyIcon = icon("/images/icons/body-icon.png");
-export const DrivetrainIcon = icon("/images/icons/drivetrain-icon.png");
-export const DimensionsIcon = icon("/images/icons/dimensions-icon.png");
-export const EngineIcon = icon("/images/icons/engine-icon.png");
-export const VehicleTypeIcon = icon("/images/icons/vehicle-type-icon.png");
-export const ShieldIcon = icon("/images/icons/shield-icon.png");
-export const WrenchIcon = icon("/images/icons/wrench-icon.png");
-export const TagIcon = icon("/images/icons/tag-icon.png");
-export const SwatchIcon = icon("/images/icons/swatch-icon.png");
-
-const ChatIconRed = icon("/images/icons/chat-icon.png");
-const ChatIconWhite = icon("/images/icons/chat-icon-white.png");
-
-/** "Chat with Us" VDP contact action + the mobile floating chat button. */
-export function ChatIcon({ className, tone = "red" }: IconProps & { tone?: "red" | "white" }) {
-  const Icon = tone === "white" ? ChatIconWhite : ChatIconRed;
-  return <Icon className={className} />;
+function brandIcon(paths: React.ReactNode) {
+  function BrandIconComponent({ className, size = DEFAULT_SIZE, strokeWidth = DEFAULT_STROKE }: LucideProps) {
+    return (
+      <svg
+        aria-hidden="true"
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+      >
+        {paths}
+      </svg>
+    );
+  }
+  return BrandIconComponent;
 }
 
-const GridIconDark = icon("/images/icons/grid-icon.png");
-const GridIconWhite = icon("/images/icons/grid-icon-white.png");
-const ListIconDark = icon("/images/icons/list-icon.png");
-const ListIconWhite = icon("/images/icons/list-icon-white.png");
-const FilterIconDark = icon("/images/icons/filter-icon.png");
-const FilterIconWhite = icon("/images/icons/filter-icon-white.png");
+export const LinkedinIcon = brandIcon(
+  <>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4V9h4v1.5A5.98 5.98 0 0 1 16 8Z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
+  </>
+);
 
-/** VRP grid/list view toggle — `tone="white"` for use on a solid red active button. */
-export function GridIcon({ className, tone = "dark" }: IconProps & { tone?: "dark" | "white" }) {
-  const Icon = tone === "white" ? GridIconWhite : GridIconDark;
-  return <Icon className={className} />;
-}
-export function ListIcon({ className, tone = "dark" }: IconProps & { tone?: "dark" | "white" }) {
-  const Icon = tone === "white" ? ListIconWhite : ListIconDark;
-  return <Icon className={className} />;
-}
-/** VRP "Filters (N)" trigger — `tone="white"` for the solid red mobile button. */
-export function FilterIcon({ className, tone = "dark" }: IconProps & { tone?: "dark" | "white" }) {
-  const Icon = tone === "white" ? FilterIconWhite : FilterIconDark;
-  return <Icon className={className} />;
+export const InstagramIcon = brandIcon(
+  <>
+    <rect width="20" height="20" x="2" y="2" rx="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37Z" />
+    <path d="M17.5 6.5h.01" />
+  </>
+);
+
+export const FacebookIcon = brandIcon(
+  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z" />
+);
+
+/**
+ * Icons that need an explicit color regardless of ambient text color (e.g.
+ * always-red-by-default on a light background, `tone="white"` on a solid
+ * red/dark surface) — `tone` maps to a `text-*` class the SVG's
+ * `currentColor` stroke/fill then picks up.
+ */
+function toneIcon(Lucide: React.ComponentType<LucideProps>, defaultTone: "red" | "white" | "dark" = "red") {
+  const toneClass = { red: "text-primary-red", white: "text-primary-white", dark: "text-primary-black" } as const;
+  function ToneIconComponent({ className, tone = defaultTone }: IconProps & { tone?: "red" | "white" | "dark" }) {
+    return (
+      <Lucide
+        aria-hidden="true"
+        size={DEFAULT_SIZE}
+        strokeWidth={DEFAULT_STROKE}
+        className={[toneClass[tone], className].filter(Boolean).join(" ")}
+      />
+    );
+  }
+  return ToneIconComponent;
 }
 
-/** Two color variants exist as separate files — pick with `tone`. */
-export function ArrowRightIcon({ className, tone = "red" }: IconProps & { tone?: "red" | "white" }) {
-  const src = tone === "white" ? "/images/icons/arrow-right-icon-white.png" : "/images/icons/arrow-right-icon.png";
-  return <Image src={src} alt="" width={64} height={64} aria-hidden="true" className={className} />;
-}
+export const PhoneIcon = toneIcon(Phone, "red");
+export const ChatIcon = toneIcon(MessageCircle, "red");
+export const GridIcon = toneIcon(LayoutGrid, "dark");
+export const ListIcon = toneIcon(List, "dark");
+export const FilterIcon = toneIcon(Filter, "dark");
+export const ArrowRightIcon = toneIcon(ArrowRight, "red");
 
-/** Always spins; two color variants exist for light vs. on-red-button use. */
+/** Always spins; `tone` picks the color for use on a light background vs. a solid red button. */
 export function SpinnerIcon({ className, tone = "red" }: IconProps & { tone?: "red" | "white" }) {
-  const src = tone === "white" ? "/images/icons/spinner-icon-white.png" : "/images/icons/spinner-icon.png";
   return (
-    <Image
-      src={src}
-      alt=""
-      width={64}
-      height={64}
+    <Loader2
       aria-hidden="true"
-      className={`animate-spin ${className ?? ""}`.trim()}
+      size={DEFAULT_SIZE}
+      strokeWidth={DEFAULT_STROKE}
+      className={["animate-spin", tone === "white" ? "text-primary-white" : "text-primary-red", className]
+        .filter(Boolean)
+        .join(" ")}
     />
   );
 }
 
-/** Save/like toggle used on vehicle cards — two color variants for the unsaved/saved state. */
-export function ThumbsUpIcon({ className, active = false }: IconProps & { active?: boolean }) {
-  const Icon = active ? ThumbsUpIconFilled : ThumbsUpIconOutline;
-  return <Icon className={className} />;
+/** Outline `ThumbsUpIconOutline`/filled `ThumbsUpIconFilled` are exported for the rare case something needs one explicitly, without the active-toggle wrapper. */
+export function ThumbsUpIconOutline({ className }: IconProps) {
+  return <ThumbsUp aria-hidden="true" size={DEFAULT_SIZE} strokeWidth={DEFAULT_STROKE} className={className} />;
+}
+export function ThumbsUpIconFilled({ className }: IconProps) {
+  return (
+    <ThumbsUp
+      aria-hidden="true"
+      size={DEFAULT_SIZE}
+      strokeWidth={DEFAULT_STROKE}
+      fill="currentColor"
+      className={["text-primary-red", className].filter(Boolean).join(" ")}
+    />
+  );
+}
+
+/** Outline `HeartIconOutline`/filled `HeartIconFilled` are exported for the rare case something needs one explicitly, without the active-toggle wrapper. */
+export function HeartIconOutline({ className }: IconProps) {
+  return <Heart aria-hidden="true" size={DEFAULT_SIZE} strokeWidth={DEFAULT_STROKE} className={className} />;
+}
+export function HeartIconFilled({ className }: IconProps) {
+  return (
+    <Heart
+      aria-hidden="true"
+      size={DEFAULT_SIZE}
+      strokeWidth={DEFAULT_STROKE}
+      fill="currentColor"
+      className={["text-primary-red", className].filter(Boolean).join(" ")}
+    />
+  );
+}
+
+/** Save/like toggle used on vehicle cards — filled + red once active, outline otherwise. */
+export function HeartIcon({ className, active = false }: IconProps & { active?: boolean }) {
+  return active ? <HeartIconFilled className={className} /> : <HeartIconOutline className={className} />;
 }
 
 const specIconMap: Record<SpecIconName, (props: IconProps) => React.ReactElement> = {

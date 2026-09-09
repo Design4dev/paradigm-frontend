@@ -8,3 +8,6 @@ export * from "./Icons";
 export * from "./Reveal";
 export * from "./Loader";
 export * from "./Accordion";
+export * from "./Checkbox";
+export * from "./FeedbackCard";
+export * from "./Tooltip";

@@ -32,6 +32,8 @@ export const footerServiceNav: NavItem[] = [
   { label: "Sales", href: "/services#sales" },
   { label: "Rentals", href: "/services#rentals" },
   { label: "Leasing & Financing", href: "/services#leasing-financing" },
+  { label: "Payment Calculator", href: "/payment-calculator" },
+  { label: "Trade-In Appraisal", href: "/trade-in" },
   { label: "Upfitting", href: "/services#upfitting" },
   { label: "Service & Parts", href: "/contact" },
 ];

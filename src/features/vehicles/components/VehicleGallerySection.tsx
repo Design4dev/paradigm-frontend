@@ -42,7 +42,7 @@ export function VehicleGallerySection({ images, vehicleName }: { images: Vehicle
             aria-label={`Open photo ${i + 1} of ${images.length} in the gallery`}
             className="focus-ring relative aspect-[4/3] overflow-hidden rounded-[var(--radius-control)] bg-soft-gray transition-opacity hover:opacity-90"
           >
-            <Image src={image.url} alt={image.alt} fill sizes="(min-width: 768px) 25vw, 45vw" className="object-cover" />
+            <Image src={image.url} alt={image.alt} fill sizes="(min-width: 768px) 25vw, 45vw" className="object-contain p-2" />
           </button>
         ))}
       </div>

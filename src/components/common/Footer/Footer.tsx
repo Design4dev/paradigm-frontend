@@ -1,21 +1,42 @@
+"use client";
+
 import { AccordionItem } from "@/components/ui/Accordion";
-import { MailIcon, MapPinIcon, PhoneIcon } from "@/components/ui/Icons";
+import { FacebookIcon, InstagramIcon, LinkedinIcon, MailIcon, MapPinIcon, PhoneIcon } from "@/components/ui/Icons";
+import { useTooltip } from "@/components/ui/Tooltip";
 import { footerCompanyNav, footerInventoryNav, footerServiceNav } from "@/config/navigation.config";
 import { siteConfig } from "@/config/site.config";
 import Image from "next/image";
 import Link from "next/link";
+import type { ComponentType } from "react";
 
 const LEGAL_LINKS = [
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Terms of Service", href: "/terms-of-service" },
-  { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
 const SOCIAL_LINKS = [
-  { label: "LinkedIn", href: siteConfig.social.linkedin },
-  { label: "Instagram", href: siteConfig.social.instagram },
-  { label: "Facebook", href: siteConfig.social.facebook },
+  { label: "LinkedIn", icon: LinkedinIcon, href: siteConfig.social.linkedin },
+  { label: "Instagram", icon: InstagramIcon, href: siteConfig.social.instagram },
+  { label: "Facebook", icon: FacebookIcon, href: siteConfig.social.facebook },
 ];
+
+/** Footer social icon — tooltip opens upward (the row sits at the very bottom of the page). */
+function FooterSocialLink({ label, href, icon: Icon }: { label: string; href: string; icon: ComponentType<{ className?: string }> }) {
+  const { triggerProps, tooltip } = useTooltip(label, "top");
+  return (
+    <>
+      <a
+        {...triggerProps}
+        href={href}
+        aria-label={label}
+        className="focus-ring flex h-9 w-9 items-center justify-center rounded-full bg-primary-white/10 text-primary-white/70 transition-colors duration-[var(--duration-micro)] hover:bg-primary-white/15 hover:text-primary-white"
+      >
+        <Icon className="h-4 w-4" />
+      </a>
+      {tooltip}
+    </>
+  );
+}
 
 const ContactList = () => (
   <ul className="text-body-m flex flex-col gap-3 text-primary-white/70">
@@ -96,26 +117,28 @@ export function Footer() {
       </div>
 
       <div className="border-t border-primary-white/10">
-        <div className="container-page flex flex-col-reverse items-center gap-4 py-6 sm:flex-row sm:justify-between">
+        <div className="container-page flex flex-col-reverse items-center gap-5 py-6 sm:flex-row sm:justify-between">
           <p className="text-caption-s text-primary-white/50">
             © {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved.
           </p>
-          <ul className="flex items-center gap-4">
-            {LEGAL_LINKS.map((link) => (
-              <li key={link.label}>
-                <Link href={link.href} className="focus-ring text-caption-s rounded text-primary-white/70 hover:text-primary-white">
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-            {SOCIAL_LINKS.map((link) => (
-              <li key={link.label}>
-                <a href={link.href} className="focus-ring text-caption-s rounded text-primary-white/70 hover:text-primary-white">
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <div className="flex flex-wrap items-center gap-5">
+            <ul className="flex items-center gap-4">
+              {LEGAL_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="focus-ring text-caption-s rounded text-primary-white/70 hover:text-primary-white">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <ul className="flex items-center gap-2" aria-label="Social links">
+              {SOCIAL_LINKS.map((social) => (
+                <li key={social.label}>
+                  <FooterSocialLink label={social.label} href={social.href} icon={social.icon} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </footer>

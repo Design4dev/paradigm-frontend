@@ -1,6 +1,7 @@
 "use client";
 
-import { ImageOffIcon, MapPinIcon, SpecIcon, ThumbsUpIcon } from "@/components/ui/Icons";
+import { AvailabilityBadge, Pill } from "@/components/ui/Badge";
+import { HeartIcon, ImageOffIcon, MapPinIcon, SpecIcon } from "@/components/ui/Icons";
 import { useQuote } from "@/features/leads/components/QuoteProvider";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/store";
@@ -33,7 +34,7 @@ export function VehicleListRow({ vehicle, priority = false }: { vehicle: Vehicle
               fill
               priority={priority}
               sizes="(min-width: 640px) 224px, 100vw"
-              className={cn("object-cover", imageStatus === "loading" && "opacity-0")}
+              className={cn("object-contain p-3", imageStatus === "loading" && "opacity-0")}
               onLoad={() => setImageStatus("loaded")}
               onError={() => setImageStatus("failed")}
             />
@@ -44,9 +45,9 @@ export function VehicleListRow({ vehicle, priority = false }: { vehicle: Vehicle
           )}
         </Link>
         {vehicle.isNew && (
-          <span className="text-label-m pointer-events-none absolute left-2.5 top-2.5 inline-flex items-center rounded-full bg-primary-red px-3 py-1 text-xs text-primary-white">
+          <Pill tone="red" className="pointer-events-none absolute left-2.5 top-2.5">
             New
-          </span>
+          </Pill>
         )}
       </div>
 
@@ -64,21 +65,23 @@ export function VehicleListRow({ vehicle, priority = false }: { vehicle: Vehicle
             onClick={() => toggleFavorite(vehicle.slug)}
             className="focus-ring flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-dark-neutral/50 hover:bg-soft-gray"
           >
-            <ThumbsUpIcon active={saved} className="h-4 w-4" />
+            <HeartIcon active={saved} className="h-4 w-4" />
           </button>
         </div>
 
-        <ul className="text-caption-s flex flex-wrap items-center gap-x-3 gap-y-1.5 text-dark-neutral/60">
+        <AvailabilityBadge status={vehicle.availability} className="w-fit" />
+
+        <ul className="text-label-m flex flex-wrap items-center gap-x-3.5 gap-y-2 leading-snug text-dark-neutral/80">
           {cardSpecs.map((spec) => (
             <li key={spec.label} className="flex items-center gap-1.5">
-              <SpecIcon name={spec.icon} className="h-3.5 w-3.5 shrink-0 opacity-50" />
+              <SpecIcon name={spec.icon} className="h-4 w-4 shrink-0 text-dark-neutral/70" />
               {spec.value}
             </li>
           ))}
         </ul>
 
-        <p className="text-caption-s flex items-center gap-1.5 text-dark-neutral/60">
-          <MapPinIcon className="h-3.5 w-3.5 shrink-0 opacity-50" />
+        <p className="text-label-m flex items-center gap-1.5 text-dark-neutral/80">
+          <MapPinIcon className="h-4 w-4 shrink-0 text-dark-neutral/70" />
           {vehicle.location}
         </p>
 

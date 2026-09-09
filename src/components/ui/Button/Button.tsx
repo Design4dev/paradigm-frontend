@@ -23,20 +23,23 @@ const sizeClasses: Record<ButtonSize, string> = {
   lg: "h-[52px] px-7 text-label-m",
 };
 
+/**
+ * The `Button` component's own classes, exported so a `<Link>` that needs to
+ * look like a button (a navigation CTA, not an in-place action) can reuse
+ * the exact same visual treatment instead of duplicating it.
+ */
+export function buttonClassName({ variant = "primary", size = "md", className }: Pick<ButtonProps, "variant" | "size" | "className"> = {}) {
+  return cn(
+    "focus-ring inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] transition-[background-color,color,transform] duration-[var(--duration-micro)] ease-[var(--ease-out-standard)] active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100",
+    variantClasses[variant],
+    sizeClasses[size],
+    className
+  );
+}
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { variant = "primary", size = "md", className, ...props },
   ref
 ) {
-  return (
-    <button
-      ref={ref}
-      className={cn(
-        "focus-ring inline-flex items-center justify-center gap-2 rounded-[var(--radius-control)] transition-[background-color,color,transform] duration-[var(--duration-micro)] ease-[var(--ease-out-standard)] active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100",
-        variantClasses[variant],
-        sizeClasses[size],
-        className
-      )}
-      {...props}
-    />
-  );
+  return <button ref={ref} className={buttonClassName({ variant, size, className })} {...props} />;
 });

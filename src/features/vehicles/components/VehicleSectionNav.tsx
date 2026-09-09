@@ -69,7 +69,7 @@ export function VehicleSectionNav({ sections }: { sections: VdpSection[] }) {
       {/* top-[85px] = header height (~69px) + 16px, so the bar sits with a visible gap under the header once stuck, not flush against it. */}
       <nav
         aria-label="Vehicle detail sections"
-        className="sticky top-[85px] z-20 rounded-[var(--radius-card)] border border-border bg-surface p-1.5 shadow-sm"
+        className="sticky top-[85px] z-[var(--z-sticky)] rounded-[var(--radius-card)] border border-border bg-surface p-1.5 shadow-sm"
       >
         <ul className="flex flex-wrap gap-1">
           {sections.map((section) => (

@@ -55,14 +55,14 @@ export function IndustrySolutions() {
           <Link
             key={industry.label}
             href={`/vehicles?type=${industry.query}`}
-            className="focus-ring group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[var(--radius-card)] text-left sm:aspect-[3/4]"
+            className="focus-ring group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[var(--radius-card)] bg-primary-black text-left sm:aspect-[3/4]"
           >
             <Image
               src={industry.image}
               alt=""
               fill
               sizes="(min-width: 1024px) 320px, 45vw"
-              className="object-cover transition-transform duration-300 ease-[var(--ease-out-standard)] group-hover:scale-105"
+              className="object-contain p-6 transition-transform duration-300 ease-[var(--ease-out-standard)] group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-primary-black/55 transition-colors duration-[var(--duration-micro)] group-hover:bg-primary-black/65" aria-hidden="true" />
             <span className="relative z-10 flex items-center justify-between gap-2 p-5 text-primary-white">

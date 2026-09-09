@@ -31,7 +31,7 @@ export function StickyMobileCTA({ vehicle }: { vehicle: Vehicle }) {
     <div
       aria-hidden={primaryCtaVisible}
       className={cn(
-        "pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface/95 px-4 pt-3 backdrop-blur transition-[transform,opacity] duration-[var(--duration-panel)] ease-[var(--ease-out-standard)] lg:hidden",
+        "pb-safe fixed inset-x-0 bottom-0 z-[var(--z-sticky)] border-t border-border bg-surface/95 px-4 pt-3 backdrop-blur transition-[transform,opacity] duration-[var(--duration-panel)] ease-[var(--ease-out-standard)] lg:hidden",
         primaryCtaVisible ? "pointer-events-none translate-y-full opacity-0" : "translate-y-0 opacity-100"
       )}
     >

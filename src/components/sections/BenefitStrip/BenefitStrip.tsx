@@ -1,7 +1,13 @@
 import { BodyIcon, DimensionsIcon, DrivetrainIcon, MapPinIcon } from "@/components/ui/Icons";
 import { cn } from "@/lib/utils";
 
-export const BENEFITS = [
+export interface BenefitStripItem {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  body: string;
+}
+
+export const BENEFITS: BenefitStripItem[] = [
   { icon: BodyIcon, title: "Work-Ready Inventory", body: "Vans, trucks and more" },
   { icon: DimensionsIcon, title: "Flexible Financing", body: "Solutions that fit" },
   { icon: DrivetrainIcon, title: "Custom Upfitting", body: "Built for your business" },
@@ -12,8 +18,19 @@ export const BENEFITS = [
  * Compact 4-point benefit strip (page-01-homepage.md §9). Shared between the
  * Homepage Hero and the VRP (page-02-vrp.md §20 — "reuse the compact
  * Paradigm Fleet benefit strip from the Homepage") rather than duplicated.
+ * `items` defaults to the site-wide BENEFITS set but accepts a page-specific
+ * set (e.g. the Payment Calculator's own 4 points) so the layout is never
+ * re-implemented just to show different copy.
  */
-export function BenefitStrip({ tone = "dark", className }: { tone?: "dark" | "light"; className?: string }) {
+export function BenefitStrip({
+  tone = "dark",
+  className,
+  items = BENEFITS,
+}: {
+  tone?: "dark" | "light";
+  className?: string;
+  items?: BenefitStripItem[];
+}) {
   return (
     <div
       className={cn(
@@ -22,7 +39,7 @@ export function BenefitStrip({ tone = "dark", className }: { tone?: "dark" | "li
       )}
     >
       <div className="container-page grid grid-cols-2 gap-x-6 gap-y-5 py-6 sm:grid-cols-4 sm:gap-x-4">
-        {BENEFITS.map((benefit, index) => (
+        {items.map((benefit, index) => (
           <div
             key={benefit.title}
             className={cn(

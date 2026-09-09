@@ -18,7 +18,7 @@ export function VdpChatBubble({ vehicle }: { vehicle: Vehicle }) {
           event.currentTarget
         )
       }
-      className="focus-ring fixed bottom-24 right-4 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-primary-red text-primary-white shadow-lg transition-transform active:scale-95 sm:hidden"
+      className="focus-ring fixed bottom-24 right-4 z-[var(--z-sticky)] flex h-12 w-12 items-center justify-center rounded-full bg-primary-red text-primary-white shadow-lg transition-transform active:scale-95 sm:hidden"
     >
       <ChatIcon tone="white" className="h-5 w-5" />
     </button>

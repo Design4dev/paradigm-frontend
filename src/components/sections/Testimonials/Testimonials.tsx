@@ -4,21 +4,9 @@ import { IconButton } from "@/components/ui/IconButton";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { TestimonialCard, type Testimonial } from "@/components/sections/TestimonialCard";
+import { useInView } from "@/hooks/useInView";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useEffect, useRef, useState } from "react";
-
-/** True once any part of `el` is on-screen — used to stop the auto-advance timer for an off-screen carousel. */
-function useInView(ref: React.RefObject<HTMLElement | null>) {
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.2 });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [ref]);
-  return inView;
-}
 
 /**
  * Representative customer sentiment, paraphrased from Paradigm Fleet's
@@ -72,13 +60,22 @@ export function Testimonials() {
     setActiveIndex(wrapped);
   };
 
-  const handleScroll = () => {
+  // Reads the ACTUAL current slide from live scroll position rather than
+  // trusting `activeIndex` state, which can lag behind mid-scroll (e.g. the
+  // visitor clicks Next again before the previous smooth-scroll finishes) —
+  // that lag was the cause of Prev/Next occasionally jumping two slides on
+  // mobile instead of exactly one.
+  const getCurrentIndex = () => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track) return activeIndex;
     const cardWidth = (track.children[0] as HTMLElement | undefined)?.offsetWidth ?? track.clientWidth;
     const index = Math.round(track.scrollLeft / (cardWidth + 20));
-    setActiveIndex(Math.min(Math.max(index, 0), TESTIMONIALS.length - 1));
+    return Math.min(Math.max(index, 0), TESTIMONIALS.length - 1);
   };
+
+  const handleScroll = () => setActiveIndex(getCurrentIndex());
+
+  const goToRelative = (delta: 1 | -1) => scrollToIndex(getCurrentIndex() + delta);
 
   // Auto-slide — pauses on hover/focus (so it never fights a reading user),
   // stops entirely once the carousel scrolls out of view, and is disabled
@@ -99,10 +96,10 @@ export function Testimonials() {
           Trusted by Businesses Across Southern Ontario
         </h2>
         <div className="flex items-center gap-2">
-          <IconButton aria-label="Previous testimonial" onClick={() => scrollToIndex(activeIndex - 1)}>
+          <IconButton aria-label="Previous testimonial" onClick={() => goToRelative(-1)}>
             <ChevronLeftIcon className="h-5 w-5" />
           </IconButton>
-          <IconButton aria-label="Next testimonial" onClick={() => scrollToIndex(activeIndex + 1)}>
+          <IconButton aria-label="Next testimonial" onClick={() => goToRelative(1)}>
             <ChevronRightIcon className="h-5 w-5" />
           </IconButton>
         </div>

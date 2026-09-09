@@ -10,7 +10,17 @@ interface BaseFieldProps {
   hideLabel?: boolean;
 }
 
-export type InputProps = BaseFieldProps & InputHTMLAttributes<HTMLInputElement>;
+/**
+ * Fixed text glued to the inside edge of the field (e.g. "$" / "%") — used
+ * by CurrencyInput/PercentageInput so those stay thin wrappers around Input
+ * instead of re-implementing field chrome (border/radius/focus/error states).
+ */
+interface AdornedFieldProps {
+  leadingText?: string;
+  trailingText?: string;
+}
+
+export type InputProps = BaseFieldProps & AdornedFieldProps & InputHTMLAttributes<HTMLInputElement>;
 
 /**
  * Shared field chrome. `h-11` (44px) is the site's one standard control
@@ -24,28 +34,62 @@ const baseFieldClasses =
 const fieldClasses = cn(baseFieldClasses, "h-11 py-2");
 const textareaFieldClasses = cn(baseFieldClasses, "min-h-24 py-3 resize-y");
 
-export function Input({ label, error, hint, id, className, containerClassName, hideLabel = false, ...props }: InputProps) {
+export function Input({
+  label,
+  error,
+  hint,
+  id,
+  className,
+  containerClassName,
+  hideLabel = false,
+  leadingText,
+  trailingText,
+  ...props
+}: InputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
   const hintId = hint ? `${inputId}-hint` : undefined;
   const errorId = error ? `${inputId}-error` : undefined;
+  const borderClass = error ? "border-primary-red" : "border-border focus-within:border-primary-black";
 
   return (
     <div className={cn("flex flex-col gap-1.5", containerClassName)}>
       <label htmlFor={inputId} className={cn("text-label-m text-primary-black", hideLabel && "sr-only")}>
         {label}
       </label>
-      <input
-        id={inputId}
-        aria-invalid={Boolean(error)}
-        aria-describedby={cn(hintId, errorId) || undefined}
-        className={cn(
-          fieldClasses,
-          error ? "border-primary-red" : "border-border focus:border-primary-black",
-          className
-        )}
-        {...props}
-      />
+      {leadingText || trailingText ? (
+        <div className={cn(fieldClasses, borderClass, "flex items-center gap-1 px-0", className)}>
+          {leadingText && (
+            <span aria-hidden="true" className="pl-4 text-dark-neutral/50">
+              {leadingText}
+            </span>
+          )}
+          <input
+            id={inputId}
+            aria-invalid={Boolean(error)}
+            aria-describedby={cn(hintId, errorId) || undefined}
+            className={cn(
+              "h-full w-full min-w-0 flex-1 bg-transparent text-body-m leading-tight text-primary-black placeholder:text-dark-neutral/40 focus:outline-none",
+              leadingText ? "pl-0" : "pl-4",
+              trailingText ? "pr-0" : "pr-4"
+            )}
+            {...props}
+          />
+          {trailingText && (
+            <span aria-hidden="true" className="pr-4 text-dark-neutral/50">
+              {trailingText}
+            </span>
+          )}
+        </div>
+      ) : (
+        <input
+          id={inputId}
+          aria-invalid={Boolean(error)}
+          aria-describedby={cn(hintId, errorId) || undefined}
+          className={cn(fieldClasses, borderClass, className)}
+          {...props}
+        />
+      )}
       {hint && !error && (
         <p id={hintId} className="text-caption-s text-dark-neutral/70">
           {hint}

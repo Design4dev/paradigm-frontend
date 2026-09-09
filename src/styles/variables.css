@@ -30,4 +30,23 @@
   --ease-in-out-standard: cubic-bezier(0.65, 0, 0.35, 1);
   --duration-micro: 200ms;
   --duration-panel: 280ms;
+
+  /**
+   * Z-index architecture — the ONE place stacking layers are numbered.
+   * Every fixed/sticky/absolute layer in the app should reference one of
+   * these (`z-[var(--z-sticky)]` etc.) instead of an arbitrary literal, so
+   * "what's above what" is decidable by reading this list, not by hunting
+   * every component for whichever number happened to work. Each tier has
+   * headroom (10 apart) for local stacking within that tier (e.g. a
+   * gallery's own prev/next arrows over its image) without ever needing to
+   * spill into the next tier.
+   */
+  --z-base: 0;
+  --z-sticky: 20; /* Sticky in-page nav/CTAs below the header: VDP tab bar, sticky mobile CTA, chat bubble. */
+  --z-header: 40; /* The site Header — always above ordinary sticky content, below overlays. */
+  --z-dropdown: 45; /* Search suggestions, select-style popovers — must clear cards, sliders and the header. */
+  --z-popover: 47; /* Tooltips and small transient popovers. */
+  --z-modal-backdrop: 50;
+  --z-modal: 51;
+  --z-toast: 60; /* Reserved for toast/notification stacks. */
 }

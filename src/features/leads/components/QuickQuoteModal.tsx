@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { FeedbackCard } from "@/components/ui/FeedbackCard";
 import { CloseIcon, SpinnerIcon } from "@/components/ui/Icons";
 import { IconButton } from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
@@ -118,26 +119,25 @@ export function QuickQuoteModal() {
         </div>
 
         {status === "success" ? (
-          <div className="flex flex-col items-center gap-4 py-4 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-green-600 text-2xl leading-none text-primary-white" aria-hidden="true">
-              ✓
-            </span>
-            <p className="text-body-l">
-              Thanks for contacting {siteConfig.legalName}. A member of our team will be in touch shortly.
-            </p>
-            <div className="flex w-full flex-col gap-3 sm:flex-row">
-              <Link href="/vehicles" className="flex-1" onClick={handleClose}>
-                <Button variant="primary" size="lg" className="w-full">
-                  Browse Inventory
-                </Button>
-              </Link>
-              <a href={siteConfig.contact.salesPhoneHref} className="flex-1">
-                <Button variant="secondary" size="lg" className="w-full">
-                  Call {siteConfig.contact.salesPhone}
-                </Button>
-              </a>
-            </div>
-          </div>
+          <FeedbackCard
+            status="success"
+            title="Request Received!"
+            message={`Thanks for contacting ${siteConfig.legalName}. A member of our team will be in touch shortly.`}
+            action={
+              <>
+                <Link href="/vehicles" className="flex-1" onClick={handleClose}>
+                  <Button variant="primary" size="lg" className="w-full">
+                    Browse Inventory
+                  </Button>
+                </Link>
+                <a href={siteConfig.contact.salesPhoneHref} className="flex-1">
+                  <Button variant="secondary" size="lg" className="w-full">
+                    Call {siteConfig.contact.salesPhone}
+                  </Button>
+                </a>
+              </>
+            }
+          />
         ) : (
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <Input

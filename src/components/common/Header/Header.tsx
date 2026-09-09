@@ -4,30 +4,46 @@ import { MobileMenu } from "@/components/common/MobileMenu";
 import { Navbar } from "@/components/common/Navbar";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
-import { MenuIcon, PhoneIcon, SearchIcon } from "@/components/ui/Icons";
+import { FacebookIcon, InstagramIcon, LinkedinIcon, MenuIcon, PhoneIcon } from "@/components/ui/Icons";
+import { useTooltip } from "@/components/ui/Tooltip";
 import { primaryNav } from "@/config/navigation.config";
 import { siteConfig } from "@/config/site.config";
 import { useQuote } from "@/features/leads/components/QuoteProvider";
-import { useSearch } from "@/features/search/components/SearchProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MEDIA_QUERIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 
 const SOCIAL_LINKS = [
-  { label: "LinkedIn", short: "in", href: siteConfig.social.linkedin },
-  { label: "Instagram", short: "ig", href: siteConfig.social.instagram },
-  { label: "Facebook", short: "fb", href: siteConfig.social.facebook },
+  { label: "LinkedIn", icon: LinkedinIcon, href: siteConfig.social.linkedin },
+  { label: "Instagram", icon: InstagramIcon, href: siteConfig.social.instagram },
+  { label: "Facebook", icon: FacebookIcon, href: siteConfig.social.facebook },
 ];
+
+/** Utility-bar social icon — a tiny circle, tooltip opening downward (the bar sits at the very top of the viewport). */
+function UtilityBarSocialLink({ label, href, icon: Icon }: { label: string; href: string; icon: ComponentType<{ className?: string }> }) {
+  const { triggerProps, tooltip } = useTooltip(label, "bottom");
+  return (
+    <>
+      <a
+        {...triggerProps}
+        href={href}
+        aria-label={label}
+        className="focus-ring flex h-6 w-6 items-center justify-center rounded-full bg-primary-white/20 transition-colors duration-[var(--duration-micro)] hover:bg-primary-white/30"
+      >
+        <Icon className="h-3.5 w-3.5" />
+      </a>
+      {tooltip}
+    </>
+  );
+}
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { openQuote } = useQuote();
-  const { openSearch } = useSearch();
-  const searchButtonRef = useRef<HTMLButtonElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -47,7 +63,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full">
+    <header className="sticky top-0 z-[var(--z-header)] w-full">
       {/* Utility bar — collapses away on scroll so the sticky header stays compact (page-01-homepage.md §4). */}
       <div
         className={cn(
@@ -62,13 +78,7 @@ export function Header() {
             <ul className="flex items-center gap-1.5" aria-label="Social links">
               {SOCIAL_LINKS.map((social) => (
                 <li key={social.label}>
-                  <a
-                    href={social.href}
-                    aria-label={social.label}
-                    className="focus-ring flex h-5 w-5 items-center justify-center rounded-full bg-primary-white/20 text-[10px] uppercase leading-none transition-colors hover:bg-primary-white/30"
-                  >
-                    {social.short}
-                  </a>
+                  <UtilityBarSocialLink label={social.label} href={social.href} icon={social.icon} />
                 </li>
               ))}
             </ul>
@@ -108,27 +118,22 @@ export function Header() {
               {siteConfig.contact.phone}
             </a>
 
-            <IconButton
-              ref={searchButtonRef}
-              aria-label="Search the fleet"
-              onClick={() => openSearch(undefined, searchButtonRef.current)}
-            >
-              <SearchIcon className="h-5 w-5 opacity-70" />
-            </IconButton>
-
             <Button
               variant="primary"
               size="md"
               className="hidden sm:inline-flex"
               onClick={(event) => openQuote(undefined, event.currentTarget)}
             >
-              Get a Quick Quote
+              {/* Responsive CTA copy (item #4) — shorter on narrower desktop/tablet widths, full phrase once there's room. */}
+              <span className="hidden lg:inline">Get a Quick Quote</span>
+              <span className="lg:hidden">Quick Quote</span>
             </Button>
 
             <IconButton
               ref={menuButtonRef}
               aria-label="Open menu"
               aria-expanded={mobileMenuOpen}
+              tooltipSide="bottom"
               className="lg:hidden"
               onClick={() => setMobileMenuOpen(true)}
             >

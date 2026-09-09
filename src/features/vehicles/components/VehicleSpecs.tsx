@@ -14,7 +14,7 @@ export function VehicleSpecs({ vehicle }: { vehicle: Vehicle }) {
               <SpecIcon name={spec.icon} className="h-5 w-5" />
             </span>
             <div>
-              <dt className="text-caption-s text-dark-neutral/60">{spec.label}</dt>
+              <dt className="text-caption-s text-dark-neutral/75">{spec.label}</dt>
               <dd className="text-label-m text-primary-black">{spec.value}</dd>
             </div>
           </div>

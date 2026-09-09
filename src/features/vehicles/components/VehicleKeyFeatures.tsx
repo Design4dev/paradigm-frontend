@@ -40,7 +40,7 @@ export function VehicleKeyFeatures({ vehicle }: { vehicle: Vehicle }) {
           return (
             <div key={feature.title} className="overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface">
               <div className="relative aspect-[4/3] w-full bg-soft-gray">
-                <Image src={image.url} alt="" fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 90vw" className="object-cover" />
+                <Image src={image.url} alt="" fill sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 90vw" className="object-contain p-3" />
               </div>
               <div className="p-4">
                 <p className="text-label-m text-primary-black">{feature.title}</p>

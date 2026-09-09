@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-full flex-col bg-primary-white text-primary-black antialiased">
         <a
           href="#main-content"
-          className="focus-ring sr-only rounded-[var(--radius-control)] bg-primary-black px-4 py-2 text-primary-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60]"
+          className="focus-ring sr-only rounded-[var(--radius-control)] bg-primary-black px-4 py-2 text-primary-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[var(--z-toast)]"
         >
           Skip to main content
         </a>

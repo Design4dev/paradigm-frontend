@@ -1,7 +1,7 @@
 "use client";
 
 import { IconButton } from "@/components/ui/IconButton";
-import { CheckIcon, ShareIcon, ThumbsUpIcon } from "@/components/ui/Icons";
+import { CheckIcon, HeartIcon, ShareIcon } from "@/components/ui/Icons";
 import { Button } from "@/components/ui/Button";
 import { QuoteCTA } from "@/features/vehicles/components/QuoteCTA";
 import { VehicleContactActions } from "@/features/vehicles/components/VehicleContactActions";
@@ -49,7 +49,7 @@ export function VehicleSummary({ vehicle }: { vehicle: Vehicle }) {
             aria-pressed={saved}
             onClick={() => toggleFavorite(vehicle.slug)}
           >
-            <ThumbsUpIcon active={saved} className="h-5 w-5" />
+            <HeartIcon active={saved} className="h-5 w-5" />
           </IconButton>
           <IconButton aria-label={copied ? "Link copied" : "Share this vehicle"} onClick={handleShare}>
             {copied ? <CheckIcon className="h-5 w-5" /> : <ShareIcon className="h-5 w-5" />}

@@ -1,7 +1,7 @@
 "use client";
 
-import { AvailabilityBadge } from "@/components/ui/Badge";
-import { ImageOffIcon, SpecIcon, ThumbsUpIcon } from "@/components/ui/Icons";
+import { AvailabilityBadge, Pill } from "@/components/ui/Badge";
+import { HeartIcon, ImageOffIcon, SpecIcon } from "@/components/ui/Icons";
 import { useQuote } from "@/features/leads/components/QuoteProvider";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/store";
@@ -35,7 +35,7 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
               priority={priority}
               sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 90vw"
               className={cn(
-                "object-cover transition-transform duration-300 ease-[var(--ease-out-standard)] group-hover:scale-[1.04]",
+                "object-contain p-3 transition-transform duration-300 ease-[var(--ease-out-standard)] group-hover:scale-[1.04]",
                 imageStatus === "loading" && "opacity-0"
               )}
               onLoad={() => setImageStatus("loaded")}
@@ -51,9 +51,9 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
         </Link>
 
         {vehicle.isNew && (
-          <span className="text-label-m pointer-events-none absolute left-3 top-3 inline-flex items-center rounded-full bg-primary-red px-3 py-1 text-xs text-primary-white">
+          <Pill tone="red" className="pointer-events-none absolute left-3 top-3">
             New
-          </span>
+          </Pill>
         )}
 
         <button
@@ -63,7 +63,7 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
           onClick={() => toggleFavorite(vehicle.slug)}
           className="focus-ring absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-primary-white/90 text-primary-black shadow-sm transition-colors duration-[var(--duration-micro)] hover:bg-primary-white"
         >
-          <ThumbsUpIcon active={saved} className="h-4 w-4" />
+          <HeartIcon active={saved} className="h-4 w-4" />
         </button>
       </div>
 
@@ -79,10 +79,10 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
 
         <AvailabilityBadge status={vehicle.availability} className="w-fit" />
 
-        <ul className="text-caption-s flex flex-wrap items-center gap-x-3 gap-y-1.5 text-dark-neutral/60">
+        <ul className="text-label-m flex flex-wrap items-center gap-x-3.5 gap-y-2 leading-snug text-dark-neutral/80">
           {cardSpecs.map((spec) => (
             <li key={spec.label} className="flex items-center gap-1.5">
-              <SpecIcon name={spec.icon} className="h-3.5 w-3.5 shrink-0 opacity-50" />
+              <SpecIcon name={spec.icon} className="h-4 w-4 shrink-0 text-dark-neutral/70" />
               {spec.value}
             </li>
           ))}

@@ -4,8 +4,14 @@ import { cn } from "@/lib/utils";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+
+// `useLayoutEffect` warns when it runs during SSR (it never actually does,
+// since this is a Client Component, but the warning fires anyway if the
+// import isn't guarded) — swap it for `useEffect` in any non-browser
+// evaluation so the module itself never triggers the warning on import.
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export type DialogVariant = "center" | "sheet-bottom" | "sheet-right" | "fullscreen";
 
@@ -53,22 +59,25 @@ export function Dialog({
 }: DialogProps) {
   const [mounted, setMounted] = useState(isOpen);
   const [entered, setEntered] = useState(false);
-  // Tracks isOpen so a change can be reacted to during render (React's
-  // recommended "adjust state when a prop changes" pattern) instead of
-  // inside an effect, keeping mount/unmount timing synchronous with the
-  // triggering render rather than one tick behind it.
-  const [trackedIsOpen, setTrackedIsOpen] = useState(isOpen);
   const containerRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
 
-  if (isOpen !== trackedIsOpen) {
-    setTrackedIsOpen(isOpen);
+  // Mounts (or starts closing) synchronously — before the browser paints —
+  // the instant `isOpen` flips, so a trigger click is never followed by a
+  // dead frame. `useLayoutEffect` rather than an "adjust state during
+  // render" branch, which — combined with the enter/exit effect below also
+  // touching `mounted`/`entered` — raced under React's dev Strict Mode
+  // double-render: the panel would mount and unmount again within a single
+  // frame, so the dialog silently never appeared (this was the "Request a
+  // Part" / "stuck page" bug — every Dialog-backed trigger was affected,
+  // not just that one button).
+  useIsomorphicLayoutEffect(() => {
     if (isOpen) {
       setMounted(true);
     } else {
       setEntered(false);
     }
-  }
+  }, [isOpen]);
 
   useLockBodyScroll(isOpen);
   useFocusTrap({ active: isOpen, containerRef, onClose, returnFocusRef });
@@ -92,7 +101,7 @@ export function Dialog({
     // would silently swallow every click on the page until the timeout
     // unmounts it. This was the root cause of "can't click anything after
     // closing Search/a modal."
-    <div className={cn("fixed inset-0 z-50 flex", !(isOpen && entered) && "pointer-events-none")} role="presentation">
+    <div className={cn("fixed inset-0 z-[var(--z-modal)] flex", !(isOpen && entered) && "pointer-events-none")} role="presentation">
       <div
         aria-hidden="true"
         onClick={onClose}

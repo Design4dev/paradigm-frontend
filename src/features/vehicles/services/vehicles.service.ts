@@ -25,9 +25,9 @@ export const vehicles: Vehicle[] = [
     isNew: true,
     location: "Hamilton, ON",
     images: vehicleImageSet(
-      PHOTO_IDS.cargoVanFront,
-      PHOTO_IDS.cargoVanSide,
-      PHOTO_IDS.cargoVanInterior,
+      PHOTO_IDS.fordTransitCargoVan,
+      PHOTO_IDS.fordTransitCargoVan,
+      PHOTO_IDS.fordTransitCargoVan,
       "Ford Transit Cargo Van"
     ),
     specs: [
@@ -86,9 +86,9 @@ export const vehicles: Vehicle[] = [
     isNew: true,
     location: "Hamilton, ON",
     images: vehicleImageSet(
-      PHOTO_IDS.cargoVanFront,
-      PHOTO_IDS.cargoVanSide,
-      PHOTO_IDS.cargoVanInterior,
+      PHOTO_IDS.fordTransitCargoVan,
+      PHOTO_IDS.fordTransitCargoVan,
+      PHOTO_IDS.fordTransitCargoVan,
       "Ford Transit Cargo Van — mid-roof"
     ),
     specs: [

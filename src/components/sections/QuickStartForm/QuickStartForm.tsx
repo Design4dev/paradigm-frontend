@@ -64,7 +64,7 @@ export function QuickStartForm() {
 
   return (
     <section aria-labelledby="quick-start-heading" className="border-y border-border bg-soft-gray py-16 sm:py-20">
-      <div className="container-page grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12">
+      <div className="container-page grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1.6fr] lg:gap-12">
         <div>
           <p className="text-label-m mb-3 text-primary-red">Get Started Today</p>
           <h2 id="quick-start-heading" className="text-heading-l mb-3">

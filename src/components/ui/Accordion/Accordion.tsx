@@ -78,7 +78,14 @@ export function AccordionItem({
           open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         )}
       >
-        <div className={cn("overflow-hidden", contentClassName)}>{children}</div>
+        {/* `contentClassName` (e.g. bottom padding) must live on a div NESTED
+            inside the overflow-hidden one, not merged onto it directly — padding
+            on the clipping element itself still contributes to its box height
+            even at grid-rows-[0fr], leaving a several-px sliver the closed
+            panel's content visibly (and illegibly) peeks through. */}
+        <div className="overflow-hidden">
+          <div className={contentClassName}>{children}</div>
+        </div>
       </div>
     </div>
   );

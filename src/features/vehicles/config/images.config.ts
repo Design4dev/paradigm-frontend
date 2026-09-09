@@ -1,78 +1,98 @@
 /**
- * Centralized remote image configuration.
+ * Centralized local image configuration.
  *
- * design.md §7 / §13 (VDP spec): all remote image URLs live in one
- * data/config module so the image host can change, or real fleet
+ * design.md §7 / §13 (VDP spec): all image references live in one
+ * data/config module so the source images can change, or real fleet
  * photography can be dropped in, without touching any component.
- * next.config.ts only needs remotePatterns for this one host.
+ *
+ * Images live in `public/images/vehicles/`, sourced from the project's
+ * `assets/` folder (real Paradigm Fleet yard photos + stock product shots
+ * per vehicle category). Where the exact vehicle/category isn't covered by
+ * a dedicated photo, the closest available category asset is reused —
+ * swap in real photography per-vehicle whenever it's available.
  */
 
-const UNSPLASH_HOST = "https://images.unsplash.com";
+const BASE = "/images/vehicles";
 
-/** Builds a sized, optimized Unsplash source URL for a given photo id. */
-function unsplash(photoId: string, width = 1600) {
-  return `${UNSPLASH_HOST}/${photoId}?auto=format&fit=crop&w=${width}&q=80`;
-}
-
-/** Stable Unsplash photo ids used across hero, category and fleet imagery. */
+/** Local asset paths, organized by what they depict — swap freely for real fleet photography. */
 export const PHOTO_IDS = {
-  heroFleetYard: "photo-1519641471654-76ce0107ad1b",
-  cargoVanFront: "photo-1601362840469-51e4d8d58785",
-  cargoVanSide: "photo-1554744512-d6c603f27c54",
-  cargoVanInterior: "photo-1591768793355-74d04bb6608f",
-  passengerVanFront: "photo-1519003722824-194d4455a60c",
-  passengerVanSide: "photo-1533473359331-0135ef1b58bf",
-  passengerVanInterior: "photo-1517524008697-84bbe3c3fd98",
-  pickupFront: "photo-1568605117036-5fe5e7bab0b7",
-  pickupSide: "photo-1541899481282-d53bffe3c35d",
-  pickupInterior: "photo-1503376780353-7e6692767b70",
-  boxTruckFront: "photo-1494976388531-d1058494cdd8",
-  boxTruckSide: "photo-1580273916550-e323be2ae537",
-  boxTruckInterior: "photo-1449965408869-eaa3f722e40d",
-  suvFront: "photo-1533106418989-88406c7cc8ca",
-  suvSide: "photo-1571127236794-81c0bbfe1ce3",
-  suvInterior: "photo-1552519507-da3b142c6e3d",
-  sedanFront: "photo-1549317661-bd32c8ce0db2",
-  sedanSide: "photo-1605559424843-9e4c228bf1c2",
-  sedanInterior: "photo-1552519507-da3b142c6e3d",
-  evFront: "photo-1593941707882-a5bba14938c7",
-  evSide: "photo-1620891549027-942fdc95d3f5",
-  evInterior: "photo-1617788138017-80ad40651399",
-  categoryVans: "photo-1601362840469-51e4d8d58785",
-  categoryTrucks: "photo-1494976388531-d1058494cdd8",
-  categorySuv: "photo-1571127236794-81c0bbfe1ce3",
-  categoryElectric: "photo-1593941707882-a5bba14938c7",
-  servicesYard: "photo-1520340356584-f9917d1eea6f",
-  testimonialDriver: "photo-1580489944761-15a19d654956",
-  industryPlumbing: "photo-1607472829122-63c9dc6c9c4b",
-  industryElectrical: "photo-1621905251189-08b45d6a269e",
-  industryHvac: "photo-1621905252507-b35492cc74b4",
-  industryLogistics: "photo-1519003722824-194d4455a60c",
+  heroFleetYard: `${BASE}/hero-bg.jpg`,
+  // The one vehicle-specific photo available — reused for both real-world
+  // Ford Transit Cargo Van listings (see vehicles.service.ts) instead of
+  // the generic cargo van category shot below.
+  fordTransitCargoVan: `${BASE}/2024-ford-transit-cargo-van.png`,
+  cargoVanFront: `${BASE}/cargo-vans.png`,
+  cargoVanSide: `${BASE}/cargo-vans.png`,
+  cargoVanInterior: `${BASE}/cargo-vans.png`,
+  passengerVanFront: `${BASE}/passenger-vans.png`,
+  passengerVanSide: `${BASE}/passenger-vans.png`,
+  passengerVanInterior: `${BASE}/passenger-vans.png`,
+  pickupFront: `${BASE}/pickup-trucks.png`,
+  pickupSide: `${BASE}/pickup-trucks.png`,
+  pickupInterior: `${BASE}/pickup-trucks.png`,
+  boxTruckFront: `${BASE}/cube-box-trucks.png`,
+  boxTruckSide: `${BASE}/cube-box-trucks.png`,
+  boxTruckInterior: `${BASE}/cube-box-trucks.png`,
+  // No dedicated SUV/sedan photography in the assets folder — closest
+  // available is the "Refrigerated / Other" catch-all shot.
+  suvFront: `${BASE}/refrigerated-other.png`,
+  suvSide: `${BASE}/refrigerated-other.png`,
+  suvInterior: `${BASE}/refrigerated-other.png`,
+  sedanFront: `${BASE}/refrigerated-other.png`,
+  sedanSide: `${BASE}/refrigerated-other.png`,
+  sedanInterior: `${BASE}/refrigerated-other.png`,
+  // The Ford E-Series Cutaway listing IS a refrigerated body — exact match.
+  evFront: `${BASE}/refrigerated-other.png`,
+  evSide: `${BASE}/refrigerated-other.png`,
+  evInterior: `${BASE}/refrigerated-other.png`,
+  categoryVans: `${BASE}/cargo-vans.png`,
+  categoryTrucks: `${BASE}/cube-box-trucks.png`,
+  categoryServiceTrucks: `${BASE}/service-trucks.png`,
+  categorySuv: `${BASE}/refrigerated-other.png`,
+  categoryElectric: `${BASE}/refrigerated-other.png`,
+  servicesYard: `${BASE}/our-service-section-img.jpg`,
+  testimonialDriver: `${BASE}/our-service-section-img.jpg`,
+  // Trades (plumbing/electrical/HVAC) map to the service truck photo;
+  // logistics maps to the cargo van used for last-mile delivery.
+  industryPlumbing: `${BASE}/service-trucks.png`,
+  industryElectrical: `${BASE}/service-trucks.png`,
+  industryHvac: `${BASE}/service-trucks.png`,
+  industryLogistics: `${BASE}/cargo-vans.png`,
 } as const;
 
 export const heroImage = {
-  url: unsplash(PHOTO_IDS.heroFleetYard, 2000),
+  url: PHOTO_IDS.heroFleetYard,
   alt: "Row of work-ready fleet vans and trucks parked at a Paradigm Fleet yard",
 };
 
 export const servicesImage = {
-  url: unsplash(PHOTO_IDS.servicesYard, 1600),
+  url: PHOTO_IDS.servicesYard,
   alt: "Paradigm Fleet service and upfitting yard",
 };
 
+/**
+ * Builds a vehicle's gallery from up to 3 angle paths. Several vehicles
+ * only have one real photo available (front/side/interior all resolve to
+ * the same local asset) — de-duping keeps the gallery honest (a single
+ * photo shown once) instead of padding it with repeated thumbnails.
+ */
 export function vehicleImageSet(
   frontId: string,
   sideId: string,
   interiorId: string,
   altBase: string
 ) {
-  return [
-    { url: unsplash(frontId, 1600), alt: `${altBase} — front three-quarter view` },
-    { url: unsplash(sideId, 1600), alt: `${altBase} — side profile view` },
-    { url: unsplash(interiorId, 1600), alt: `${altBase} — interior/cabin view` },
+  const candidates = [
+    { url: frontId, alt: `${altBase} — front three-quarter view` },
+    { url: sideId, alt: `${altBase} — side profile view` },
+    { url: interiorId, alt: `${altBase} — interior/cabin view` },
   ];
+  const seen = new Set<string>();
+  return candidates.filter(({ url }) => (seen.has(url) ? false : (seen.add(url), true)));
 }
 
-export function categoryImage(id: string, width = 900) {
-  return unsplash(id, width);
+/** `width` is unused for local assets (next/image handles responsive sizing on its own) — kept so existing call sites don't need to change. */
+export function categoryImage(id: string, width?: number) {
+  void width;
+  return id;
 }

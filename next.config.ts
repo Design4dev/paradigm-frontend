@@ -5,15 +5,8 @@ const nextConfig: NextConfig = {
     "divinity-prorate-lived.ngrok-free.dev",
   ],
 
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
-    ],
-  },
+  // All images are served locally from public/images/ — no remote image
+  // hosts to allowlist.
 };
 
 export default nextConfig;

@@ -3,7 +3,19 @@ import { env } from "@/config/environment";
 export type AnalyticsEvent =
   | { name: "vehicle_viewed"; slug: string }
   | { name: "quote_requested"; vehicleSlug?: string }
-  | { name: "contact_submitted" };
+  | { name: "contact_submitted" }
+  | { name: "trade_in_view" }
+  | { name: "trade_in_started" }
+  | { name: "trade_in_vehicle_step_completed" }
+  | { name: "trade_in_condition_step_completed" }
+  | { name: "trade_in_photo_upload_started" }
+  | { name: "trade_in_photo_uploaded" }
+  | { name: "trade_in_contact_step_completed" }
+  | { name: "trade_in_submitted" }
+  | { name: "trade_in_submission_success" }
+  | { name: "trade_in_submission_error" }
+  | { name: "trade_in_contact_clicked" }
+  | { name: "trade_in_browse_vehicles_clicked" };
 
 /**
  * Minimal analytics abstraction. Without `NEXT_PUBLIC_ANALYTICS_ID` set this

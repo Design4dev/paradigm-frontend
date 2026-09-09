@@ -1,14 +1,11 @@
 "use client";
 
-import type { AdvancedSearchFilters } from "@/features/vehicles/services/vehicles.service";
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 
 interface SearchContextValue {
   isOpen: boolean;
   initialQuery: string;
-  /** When set, the overlay shows these structured results instead of running the free-text query. */
-  initialFilters: AdvancedSearchFilters | null;
-  openSearch: (initialQuery?: string, trigger?: HTMLElement | null, filters?: AdvancedSearchFilters | null) => void;
+  openSearch: (initialQuery?: string, trigger?: HTMLElement | null) => void;
   closeSearch: () => void;
   triggerRef: React.MutableRefObject<HTMLElement | null>;
 }
@@ -16,20 +13,19 @@ interface SearchContextValue {
 const SearchContext = createContext<SearchContextValue | null>(null);
 
 /**
- * Backs the single, always-in-page search experience (Header icon, Hero
- * Buy/Rent tabs, Advanced Search) — every entry point opens the same
- * overlay instead of navigating to a separate page/route.
+ * Backs the free-text SearchOverlay — the Hero's Buy/Rent search and the
+ * Global Search bar now navigate straight to the real, filtered Vehicle
+ * Listing instead of opening this overlay (page-01-homepage.md §8), so its
+ * remaining real use is the VDP 404 page's "Search Vehicles" fallback.
  */
 export function SearchProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [initialQuery, setInitialQuery] = useState("");
-  const [initialFilters, setInitialFilters] = useState<AdvancedSearchFilters | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
-  const openSearch = useCallback((query?: string, trigger?: HTMLElement | null, filters?: AdvancedSearchFilters | null) => {
+  const openSearch = useCallback((query?: string, trigger?: HTMLElement | null) => {
     triggerRef.current = trigger ?? (document.activeElement as HTMLElement | null);
     setInitialQuery(query ?? "");
-    setInitialFilters(filters ?? null);
     setIsOpen(true);
   }, []);
 
@@ -38,8 +34,8 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ isOpen, initialQuery, initialFilters, openSearch, closeSearch, triggerRef }),
-    [isOpen, initialQuery, initialFilters, openSearch, closeSearch]
+    () => ({ isOpen, initialQuery, openSearch, closeSearch, triggerRef }),
+    [isOpen, initialQuery, openSearch, closeSearch]
   );
 
   return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;

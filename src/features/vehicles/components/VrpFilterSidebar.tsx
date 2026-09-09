@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { CloseIcon, SearchIcon } from "@/components/ui/Icons";
 import { IconButton } from "@/components/ui/IconButton";
 import { Input } from "@/components/ui/Input";
@@ -84,20 +85,15 @@ export function VrpFilterSidebar({
 
       <fieldset>
         <legend className="text-label-m mb-2 text-primary-black">Vehicle Type</legend>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           {VRP_CATEGORIES.filter((c) => c.type).map((category) => (
-            <label key={category.type} className="text-body-m flex cursor-pointer items-center justify-between gap-2 text-dark-neutral/80">
-              <span className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={draft.types.includes(category.type as string)}
-                  onChange={() => toggleType(category.type as string)}
-                  className="h-4 w-4 shrink-0 accent-primary-red"
-                />
-                {category.label}
-              </span>
-              <span className="text-caption-s text-dark-neutral/50">({typeCounts[category.type as string] ?? 0})</span>
-            </label>
+            <Checkbox
+              key={category.type}
+              label={category.label}
+              checked={draft.types.includes(category.type as string)}
+              onChange={() => toggleType(category.type as string)}
+              trailing={`(${typeCounts[category.type as string] ?? 0})`}
+            />
           ))}
         </div>
       </fieldset>
@@ -182,20 +178,15 @@ export function VrpFilterSidebar({
 
       <fieldset>
         <legend className="text-label-m mb-2 text-primary-black">Condition</legend>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           {(["New", "Used"] as const).map((condition) => (
-            <label key={condition} className="text-body-m flex cursor-pointer items-center justify-between gap-2 text-dark-neutral/80">
-              <span className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={draft.conditions.includes(condition)}
-                  onChange={() => toggleCondition(condition)}
-                  className="h-4 w-4 shrink-0 accent-primary-red"
-                />
-                {condition}
-              </span>
-              <span className="text-caption-s text-dark-neutral/50">({conditionCounts[condition]})</span>
-            </label>
+            <Checkbox
+              key={condition}
+              label={condition}
+              checked={draft.conditions.includes(condition)}
+              onChange={() => toggleCondition(condition)}
+              trailing={`(${conditionCounts[condition]})`}
+            />
           ))}
         </div>
       </fieldset>

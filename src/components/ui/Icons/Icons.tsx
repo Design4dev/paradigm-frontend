@@ -10,20 +10,25 @@ import {
   ChevronLeft,
   ChevronRight,
   Cog,
+  CreditCard,
   Filter,
   Fuel,
   Gauge,
   Hash,
   Heart,
+  IdCard,
   ImageOff,
   Info,
   LayoutGrid,
   List,
+  ListChecks,
   Loader2,
+  Lock,
   Mail,
   MapPin,
   MessageCircle,
   Menu,
+  Package,
   Palette,
   Pause,
   Phone,
@@ -38,7 +43,9 @@ import {
   ThumbsUp,
   Truck,
   Upload,
+  User,
   Users,
+  Volume2,
   Wrench,
   X,
   XCircle,
@@ -105,6 +112,13 @@ export const PauseIcon = icon(Pause);
 export const PlayIcon = icon(Play);
 export const UploadIcon = icon(Upload);
 export const RetryIcon = icon(RefreshCw);
+export const CustomerIcon = icon(User);
+export const PaymentIcon = icon(CreditCard);
+export const LockIcon = icon(Lock);
+export const LicenseIcon = icon(IdCard);
+export const ExtrasIcon = icon(Package);
+export const ReviewIcon = icon(ListChecks);
+export const SpeakerIcon = icon(Volume2);
 
 /**
  * Social brand marks — `lucide-react` dropped its brand-icon set some

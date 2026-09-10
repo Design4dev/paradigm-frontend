@@ -1,8 +1,17 @@
 import { ArrowRightIcon, BodyIcon, DimensionsIcon, DrivetrainIcon, GaugeIcon } from "@/components/ui/Icons";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
+export interface ServiceGridItem {
+  id: string;
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+  href: string;
+}
+
 /** The four service lines — page-01-homepage.md §13. */
-const SERVICES = [
+const SERVICES: ServiceGridItem[] = [
   {
     id: "sales",
     icon: GaugeIcon,
@@ -15,7 +24,10 @@ const SERVICES = [
     icon: BodyIcon,
     title: "Rentals",
     description: "Flexible rentals for short or long term.",
-    href: "/services#rentals",
+    // Rentals are their own full flow under /rentals, not a services-page
+    // anchor — every rental entry point goes here, never the inventory or
+    // services page.
+    href: "/rentals",
   },
   {
     id: "leasing-financing",
@@ -33,10 +45,17 @@ const SERVICES = [
   },
 ];
 
-export function ServicesGrid() {
+/**
+ * `items`/`gridClassName` default to the homepage/Services page's own four
+ * service lines and 4-column layout, so every existing call site is
+ * unchanged. Reused as-is (not duplicated) by the Rental Landing page's
+ * "Paradigm Fleet Ecosystem" section (spec §10) with its own 5 real
+ * business-line items — same card shape, no second card component.
+ */
+export function ServicesGrid({ items = SERVICES, gridClassName }: { items?: ServiceGridItem[]; gridClassName?: string }) {
   return (
-    <div className="grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      {SERVICES.map((service) => (
+    <div className={cn("grid grid-cols-1 items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-4", gridClassName)}>
+      {items.map((service) => (
         <div
           key={service.id}
           id={service.id}

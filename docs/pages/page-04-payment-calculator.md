@@ -1753,6 +1753,21 @@ After this page is implemented and approved:
 
 ---
 
+# 62.5 AS-BUILT UPDATE (2026-09 client feedback pass)
+
+Client feedback: the "Your Payment Estimate" summary card (`CalculatorSummary.tsx`, §23/§24) should
+show no buttons. `VehicleMatchCTA` ("View Matching Vehicles" / "Talk to Our Finance Experts", §26/§27)
+is now hidden from that card specifically, behind a `SHOW_VEHICLE_MATCH_CTA = false` flag — not
+deleted, and **`VehicleMatchCTA` is still used exactly as before by Step 3 / Review** (§29,
+`CalculatorStep3.tsx`), which is a different location the client feedback didn't ask to change. The
+card's spacing rebalances automatically (same `gap-5` rhythm already used between every section of
+the card) — no manual spacing patch was needed. Restoring the summary-card buttons is a one-line
+flip of the flag.
+
+This is a page-specific override of §23–§27's original requirement that the summary panel always
+carry both CTAs — kept here rather than edited out of those sections above, so the original intent
+and the current override are both visible.
+
 # 63. IMPLEMENTATION NOTES (as built)
 
 Route: `/payment-calculator` (`src/app/(website)/payment-calculator/page.tsx`), a server component

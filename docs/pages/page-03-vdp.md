@@ -5,6 +5,18 @@
 
 As-built documentation — see `docs/pages/page-01-homepage.md` and `docs/pages/page-02-vrp.md` for the sibling docs and their format.
 
+## As-built update (2026-09 client feedback pass)
+
+- **Financing section's two links are now styled as a real primary/secondary button pair**
+  (`buttonClassName()` from the shared `Button` component, reused rather than duplicated) instead
+  of plain text links: "Open Full Payment Calculator →" (primary/solid) is the dominant action,
+  "Get a Trade-In Appraisal →" (secondary/outlined) is clearly present but visually quieter. Stacks
+  full-width on mobile, sits side by side from `sm:` up.
+- **"View Financing Options →" is temporarily hidden** behind a `SHOW_VIEW_FINANCING_OPTIONS = false`
+  flag in `VehicleFinancing.tsx` — not deleted, and the `/services#leasing-financing` route/content
+  it pointed at is untouched. Restoring it is a one-line flip. No gap is left in its place (it sat
+  in a `flex flex-col gap-5`, which closes around a non-rendered child automatically).
+
 ## Polish pass (visual-match + interaction fixes)
 
 - **Gallery whitespace**: the desktop grid (thumbnail rail + main image) now uses `items-center`

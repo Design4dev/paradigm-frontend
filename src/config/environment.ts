@@ -19,6 +19,19 @@ export const env = {
   /** Optional analytics provider id — features/analytics no-ops without it. */
   analyticsId: process.env.NEXT_PUBLIC_ANALYTICS_ID ?? "",
 
+  /**
+   * Apprentall booking-engine base URL + client ID — verified from
+   * paradigmtruckrental.com's own production HTML (`<iframe
+   * id="reservation_iframe" src="https://book.apprentall.cloud/?clientid=1923">`),
+   * not guessed. Both are public, non-secret values (they appear directly in
+   * that site's page source), so they default to the real, working values
+   * here and don't require a `.env.local` for local development to work —
+   * `.env.example` documents them and lets a different environment (e.g. a
+   * future second client/location) override either one.
+   */
+  apprentallUrl: process.env.NEXT_PUBLIC_APPRENTALL_URL || "https://book.apprentall.cloud",
+  apprentallClientId: process.env.NEXT_PUBLIC_APPRENTALL_CLIENT_ID || "1923",
+
   isProduction: process.env.NODE_ENV === "production",
 } as const;
 

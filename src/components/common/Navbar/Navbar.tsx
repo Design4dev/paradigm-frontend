@@ -24,6 +24,7 @@ export function Navbar({ items, className, itemClassName }: { items: NavItem[]; 
             <Link
               href={item.href}
               aria-current={active ? "page" : undefined}
+              {...(item.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className={cn(
                 "focus-ring text-label-m relative inline-flex items-center px-3 py-2 text-primary-black transition-colors duration-[var(--duration-micro)] hover:text-primary-red",
                 active && "font-bold text-primary-red",
@@ -31,6 +32,7 @@ export function Navbar({ items, className, itemClassName }: { items: NavItem[]; 
               )}
             >
               {item.label}
+              {item.newTab && <span className="sr-only"> (opens in a new tab)</span>}
               <span
                 aria-hidden="true"
                 className={cn(

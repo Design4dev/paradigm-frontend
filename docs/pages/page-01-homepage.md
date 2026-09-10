@@ -47,12 +47,12 @@ use case but is not rendered on the homepage.
   root). If a card ever looks like it's sized to its own content again, that chain is broken
   somewhere — check for a missing `h-full`, not a new one-off fix.
 - **Featured Fleet shows 3 cards** (`lg:grid-cols-3`), matching the reference exactly — not 4.
-- **Icons stay raster (no SVG anywhere in the project)** — see the README's "Images: PNG
-  everywhere, no SVG" section. The save/like toggle on vehicle cards uses `ThumbsUpIcon`
-  (`public/images/icons/thumbs-up-icon*.png`), not a star. `PhoneIcon` takes a `tone="white"`
-  prop for use on colored backgrounds (e.g. the red Final CTA band) — a raster icon can't inherit
-  `currentColor`, so anywhere an icon must be visible against a non-default background, swap the
-  file explicitly rather than relying on text-color classes.
+- **Icons are inline SVG components** (`lucide-react`, wrapped by `src/components/ui/Icons`) — see
+  `design.md` §2 (corrected 2026-09; this used to describe a raster-PNG icon system that no longer
+  exists). The save/like toggle on vehicle cards uses `HeartIcon` (filled red when active), not a
+  thumbs-up. `PhoneIcon` takes a `tone="white"` prop for use on colored backgrounds (e.g. the red
+  Final CTA band) — since every icon is `currentColor`-based, `tone` just swaps which `text-*`
+  class wraps it, it doesn't swap a file.
 - **Hero heading** uses the `text-display-l` token (not `text-display-xl`) inside a `max-w-4xl`
   container so "Built Around Your Business." comfortably fits on its own line at desktop widths —
   `text-display-xl`'s ~80px cap made a 2-line, screenshot-accurate wrap impossible at any

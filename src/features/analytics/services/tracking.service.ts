@@ -15,7 +15,25 @@ export type AnalyticsEvent =
   | { name: "trade_in_submission_success" }
   | { name: "trade_in_submission_error" }
   | { name: "trade_in_contact_clicked" }
-  | { name: "trade_in_browse_vehicles_clicked" };
+  | { name: "trade_in_browse_vehicles_clicked" }
+  | { name: "rental_quote_view" }
+  | { name: "rental_quote_submitted" }
+  | { name: "rental_landing_view" }
+  | { name: "rental_category_click"; categorySlug: string }
+  | { name: "rental_vehicle_click"; vehicleSlug: string }
+  | { name: "rental_search_start" }
+  | { name: "rental_search_success" }
+  | { name: "rental_search_error" }
+  | { name: "rental_vehicle_selected"; vehicleSlug: string }
+  | { name: "rental_addon_selected"; addonId: string }
+  | { name: "rental_coverage_selected"; coverageId: string }
+  | { name: "rental_info_completed" }
+  | { name: "rental_payment_started" }
+  | { name: "rental_payment_success" }
+  | { name: "rental_payment_failure" }
+  | { name: "rental_booking_completed"; referenceId: string }
+  | { name: "rental_finder_started" }
+  | { name: "rental_finder_completed" };
 
 /**
  * Minimal analytics abstraction. Without `NEXT_PUBLIC_ANALYTICS_ID` set this

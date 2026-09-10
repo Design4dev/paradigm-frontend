@@ -139,11 +139,13 @@ correctly but return HTTP 200 instead of 404 — confirmed by bisecting against 
 reproduction. Removing the global loading boundary fixed it; per-feature loading states (Search,
 Quick Quote, Contact form) don't depend on it and are unaffected.
 
-## Images: PNG everywhere, no SVG
+## Images: JPG/PNG photography, SVG icon components
 
-Every image asset in the project — the logo, the icon mark, the favicon, and all ~25 UI icons
-(search, menu, chevrons, spec icons, etc.) — is a real raster file (`.png` / `.ico`) under
-`public/`, not inline or file-based SVG.
+**Corrected 2026-09 audit note:** this section previously described a raster-PNG icon system
+(`public/images/icons/*.png`). The project has since moved back to inline SVG icon *components*
+(below) — that folder is now effectively empty. This section documents the current, actual state;
+see `design.md` §2 for the full rationale. Photography/logo assets are still exclusively JPG/PNG —
+that part of the original rule is unchanged.
 
 - **Logo**: `public/images/logos/logo.png` (black, light backgrounds), `logo-white.png` (white
   wordmark + red mark, dark backgrounds) and `icon.png` (mark only) are the **actual supplied
@@ -151,13 +153,14 @@ Every image asset in the project — the logo, the icon mark, the favicon, and a
   recreation.
 - **Favicon**: `public/favicon.ico` + `favicon.png` + `apple-touch-icon.png`, generated directly
   from the real icon mark and wired up via `metadata.icons` in `app/layout.tsx`.
-- **UI icons**: `components/ui/Icons/Icons.tsx` still exports the same named components
-  (`SearchIcon`, `CheckIcon`, `SpecIcon`, …) so every call site is unchanged — internally each one
-  now renders a `next/image` pointing at a pre-rendered PNG in `public/images/icons/` instead of
-  inline SVG markup. Icons that need more than one color (`ArrowRightIcon`, `SpinnerIcon`) take a
-  `tone="red" | "white"` prop and load the matching file.
-- **Trade-off worth knowing**: raster icons can't recolor via CSS `currentColor` the way the old
-  inline SVGs did, so a couple of hover/opacity effects that used to tint the icon itself (e.g. a
-  chevron turning red on link hover) now only affect the surrounding text — each icon still uses
-  its correct color for the context it appears in most, and multi-color cases got a
-  second file (`tone` prop) rather than losing fidelity.
+- **UI icons**: `components/ui/Icons/Icons.tsx` exports named components (`SearchIcon`, `CheckIcon`,
+  `SpecIcon`, …), each one an inline SVG sourced from `lucide-react` (wrapped by a shared `icon()` /
+  `toneIcon()` helper — 20px, 1.75 stroke, `currentColor`-based) or, for the handful of brand marks
+  `lucide-react` doesn't ship (`LinkedinIcon`, `InstagramIcon`, `FacebookIcon`), hand-drawn to the
+  same geometry. Icons that need an explicit color regardless of ambient text color
+  (`PhoneIcon`, `ArrowRightIcon`, `SpinnerIcon`) take a `tone="red" | "white" | "dark"` prop.
+- Because every icon is `currentColor`-based, a wrapping `text-*` class (hover, active, tone
+  variants) recolors the icon directly — no per-color file variants needed.
+- Vehicle/category/site photography (`public/images/vehicles/*.jpg|png`) remains JPG/PNG via
+  `next/image`, sourced from the project's `assets/` staging folder — no SVG or external image URLs
+  for photography.

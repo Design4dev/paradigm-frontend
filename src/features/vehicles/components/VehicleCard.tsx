@@ -13,13 +13,60 @@ import { useState } from "react";
 /** Order the card's spec row pulls from `vehicle.specs`, matching the reference screenshot. */
 const CARD_SPEC_ORDER: SpecIconName[] = ["mileage", "engine", "transmission", "fuel"];
 
-export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; priority?: boolean }) {
+/**
+ * Rental-context spec order (page-06-rental.md) — capacity/cargo/drivetrain
+ * info, all verified present on every vehicle record (vehicles.service.ts).
+ * Omits `mileage`: it's the specific unit's sales/trade-in odometer history,
+ * not a rental-relevant attribute, per client feedback that rental cards
+ * shouldn't carry sales-condition data. Nothing invented — every value here
+ * already exists in the real vehicle data, just reordered for this context.
+ */
+export const RENTAL_CARD_SPEC_ORDER: SpecIconName[] = ["seats", "dimensions", "transmission", "fuel"];
+
+export interface VehicleCardProps {
+  vehicle: Vehicle;
+  priority?: boolean;
+  /**
+   * Suppresses sales-only presentation for non-sales contexts (e.g. rental
+   * matching results — design.md §7 / page-06-rental.md). `vehicle.price` is
+   * documented as "full purchase price" (vehicle.types.ts) — not a rental
+   * rate, so it has no valid meaning outside the sales flow. `availability`
+   * ("reserved"/"coming-soon"/etc.) is sales-inventory lifecycle status, not
+   * a rental confirmation state. The built-in "Request a Quote" button opens
+   * the general sales quote modal; hide it wherever a page renders its own,
+   * differently-routed quote CTA instead. Defaults all preserve the exact
+   * existing sales/VRP/Homepage card — nothing changes unless opted in.
+   */
+  hidePrice?: boolean;
+  hideAvailabilityBadge?: boolean;
+  hideQuoteButton?: boolean;
+  /** Which spec row to show — defaults to the existing sales order (unchanged everywhere it's already used). */
+  specOrder?: SpecIconName[];
+  /**
+   * Rental context (page-06-rental.md): when set, renders a primary
+   * "Rent It →" link to this href in the card's own CTA row (in place of
+   * the sales quote button) and switches "View Vehicle" to the secondary
+   * button style, so there's exactly one primary CTA per card. Leaves
+   * `hideQuoteButton`/sales behavior untouched everywhere this isn't passed.
+   */
+  rentalQuoteHref?: string;
+}
+
+export function VehicleCard({
+  vehicle,
+  priority = false,
+  hidePrice = false,
+  hideAvailabilityBadge = false,
+  hideQuoteButton = false,
+  specOrder = CARD_SPEC_ORDER,
+  rentalQuoteHref,
+}: VehicleCardProps) {
   const [imageStatus, setImageStatus] = useState<"loading" | "loaded" | "failed">("loading");
   const saved = useAppStore((state) => state.favoriteSlugs.includes(vehicle.slug));
   const toggleFavorite = useAppStore((state) => state.toggleFavorite);
   const { openQuote } = useQuote();
   const primaryImage = vehicle.images[0];
-  const cardSpecs = CARD_SPEC_ORDER.map((icon) => vehicle.specs.find((spec) => spec.icon === icon)).filter(
+  const cardSpecs = specOrder.map((icon) => vehicle.specs.find((spec) => spec.icon === icon)).filter(
     (spec): spec is Vehicle["specs"][number] => Boolean(spec)
   );
 
@@ -74,10 +121,10 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
               {vehicle.year} {vehicle.brand} {vehicle.model}
             </h3>
           </Link>
-          <span className="text-heading-m shrink-0 text-primary-red">{vehicle.priceLabel}</span>
+          {!hidePrice && <span className="text-heading-m shrink-0 text-primary-red">{vehicle.priceLabel}</span>}
         </div>
 
-        <AvailabilityBadge status={vehicle.availability} className="w-fit" />
+        {!hideAvailabilityBadge && <AvailabilityBadge status={vehicle.availability} className="w-fit" />}
 
         <ul className="text-label-m flex flex-wrap items-center gap-x-3.5 gap-y-2 leading-snug text-dark-neutral/80">
           {cardSpecs.map((spec) => (
@@ -91,19 +138,35 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
         <div className="mt-auto flex items-center gap-2 pt-2">
           <Link
             href={`/vehicles/${vehicle.slug}`}
-            className="focus-ring flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-control)] bg-primary-red px-2 text-label-m text-primary-white transition-colors duration-[var(--duration-micro)] hover:bg-accent-red-dark"
+            className={cn(
+              "focus-ring flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-control)] px-2 text-label-m transition-colors duration-[var(--duration-micro)]",
+              rentalQuoteHref
+                ? "border border-primary-black text-primary-black hover:bg-primary-black hover:text-primary-white"
+                : "bg-primary-red text-primary-white hover:bg-accent-red-dark"
+            )}
           >
             View Vehicle
           </Link>
-          <button
-            type="button"
-            onClick={(event) =>
-              openQuote({ slug: vehicle.slug, name: `${vehicle.year} ${vehicle.brand} ${vehicle.model}` }, event.currentTarget)
-            }
-            className="focus-ring flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-control)] border border-primary-black px-2 text-label-m text-primary-black transition-colors duration-[var(--duration-micro)] hover:bg-primary-black hover:text-primary-white"
-          >
-            Request a Quote
-          </button>
+          {rentalQuoteHref ? (
+            <Link
+              href={rentalQuoteHref}
+              className="focus-ring flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-control)] bg-primary-red px-2 text-label-m text-primary-white transition-colors duration-[var(--duration-micro)] hover:bg-accent-red-dark"
+            >
+              Rent It →
+            </Link>
+          ) : (
+            !hideQuoteButton && (
+              <button
+                type="button"
+                onClick={(event) =>
+                  openQuote({ slug: vehicle.slug, name: `${vehicle.year} ${vehicle.brand} ${vehicle.model}` }, event.currentTarget)
+                }
+                className="focus-ring flex h-10 flex-1 items-center justify-center whitespace-nowrap rounded-[var(--radius-control)] border border-primary-black px-2 text-label-m text-primary-black transition-colors duration-[var(--duration-micro)] hover:bg-primary-black hover:text-primary-white"
+              >
+                Request a Quote
+              </button>
+            )
+          )}
         </div>
       </div>
     </div>

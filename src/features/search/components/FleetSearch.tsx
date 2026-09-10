@@ -5,6 +5,8 @@ import { ClipboardIcon, ResourceIcon, VehicleTypeIcon } from "@/components/ui/Ic
 import { Select } from "@/components/ui/Select";
 import { GlobalSearchBar } from "@/features/search/components/GlobalSearchBar";
 import { useQuote } from "@/features/leads/components/QuoteProvider";
+import { BOOKING_LOCATIONS, RENTAL_CATEGORIES } from "@/features/rental/config/booking.config";
+import { useRentalBookingStore } from "@/features/rental/store/rentalBooking.store";
 import {
   EMPTY_ADVANCED_FILTERS,
   advancedFiltersToVrpFilters,
@@ -49,11 +51,17 @@ const INVENTORY_HEADLINE = "500+ Commercial Vehicles Available";
 export function FleetSearch() {
   const router = useRouter();
   const { openQuote } = useQuote();
+  const setRentalCategory = useRentalBookingStore((s) => s.setCategory);
   const [tab, setTab] = useState<SearchTab>("buy");
   const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
   const [type, setType] = useState("Any");
   const [make, setMake] = useState("Any");
   const [location, setLocation] = useState("Any");
+  // Rentals are a separate catalog/taxonomy from sales inventory (own
+  // categories, own single verified location) — kept as its own state
+  // rather than reusing Buy's `type`/`location`, which are sales-inventory
+  // values and would be meaningless on the rental side.
+  const [rentCategory, setRentCategory] = useState("Any");
 
   /** Navigates to the real, filtered Vehicle Listing (VRP) — never a generic listing that ignores the selection. */
   const goToListing = (filters: AdvancedSearchFilters) => {
@@ -67,9 +75,18 @@ export function FleetSearch() {
     goToListing({ ...EMPTY_ADVANCED_FILTERS, type, make, location });
   };
 
+  /**
+   * Rentals live entirely under `/rentals`, never the sales inventory
+   * listing — this hands off to the real Rental Search page (the same one
+   * every "Rent It" uses), carrying the chosen category into the shared
+   * rental store rather than a sales VRP query string.
+   */
   const submitRent = (event: React.FormEvent) => {
     event.preventDefault();
-    goToListing({ ...EMPTY_ADVANCED_FILTERS, type, location });
+    if (rentCategory !== "Any") {
+      setRentalCategory(rentCategory);
+    }
+    router.push("/rentals/search");
   };
 
   return (
@@ -156,17 +173,28 @@ export function FleetSearch() {
         {!advancedSearchOpen && tab === "rent" && (
           <div id="search-tabpanel-rent" role="tabpanel" aria-labelledby="search-tab-rent">
             <form onSubmit={submitRent} className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-end">
-              <Select label="Vehicle Type" options={toOptions(vehicleTypes, "Any Type")} value={type} onChange={(e) => setType(e.target.value)} />
-              <Select label="Location" options={toOptions(vehicleLocations, "Any Location")} value={location} onChange={(e) => setLocation(e.target.value)} />
+              <Select
+                label="Vehicle Type"
+                options={[{ label: "Any Type", value: "Any" }, ...RENTAL_CATEGORIES.map((category) => ({ label: category.name, value: category.slug }))]}
+                value={rentCategory}
+                onChange={(e) => setRentCategory(e.target.value)}
+              />
+              {/* Only one pickup location is verified (design.md §7) — shown, not offered as a fake choice. */}
+              <Select
+                label="Location"
+                options={BOOKING_LOCATIONS.map((loc) => ({ label: loc.label, value: loc.value }))}
+                value={BOOKING_LOCATIONS[0].value}
+                disabled
+              />
               <Button type="submit" variant="primary" size="md" className="w-full sm:col-span-2">
                 Search Rentals
               </Button>
             </form>
             <p className="text-body-m mt-4 text-dark-neutral/60">
               Flexible short-term rentals and multi-year leases for Southern Ontario businesses.{" "}
-              <a href="/services#rentals" className="focus-ring rounded text-primary-red hover:underline">
+              <Link href="/rentals" className="focus-ring rounded text-primary-red hover:underline">
                 Learn about rentals →
-              </a>
+              </Link>
             </p>
           </div>
         )}

@@ -10,7 +10,7 @@ export function BlogList({ initialPosts }: { initialPosts: BlogPost[] }) {
 
   return (
     <div>
-      <div className="focus-within:ring-primary-red mb-8 flex max-w-md items-center gap-2 rounded-[var(--radius-control)] border border-border bg-surface px-4 py-2.5 focus-within:ring-2">
+      <div className="focus-within:border-primary-black mb-8 flex max-w-md items-center gap-2 rounded-[var(--radius-control)] border border-border bg-surface px-4 py-2.5">
         <SearchIcon className="h-4 w-4 shrink-0 opacity-40" />
         <label htmlFor="blog-search" className="sr-only">
           Search articles

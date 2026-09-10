@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
+import { FeedbackCard } from "@/components/ui/FeedbackCard";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { SpinnerIcon } from "@/components/ui/Icons";
@@ -77,23 +78,23 @@ export function QuickStartForm() {
         </div>
 
         {status === "success" ? (
-          <div className="flex flex-col items-start justify-center gap-3 rounded-[var(--radius-card)] border border-border bg-surface p-6 sm:p-8" role="status">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-green-600 text-lg leading-none text-primary-white" aria-hidden="true">
-              ✓
-            </span>
-            <p className="text-body-l">
-              Thanks, {form.name.split(" ")[0] || "there"} — we&apos;ve got your details. Our team will reach out
-              shortly with options.
-            </p>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setForm(EMPTY_FORM);
-                setStatus("idle");
-              }}
-            >
-              Submit another request
-            </Button>
+          <div className="flex items-center justify-center rounded-[var(--radius-card)] border border-border bg-surface p-6 sm:p-8">
+            <FeedbackCard
+              status="success"
+              title={`Thanks, ${form.name.split(" ")[0] || "there"} — we've got your details.`}
+              message="Our team will reach out shortly with options."
+              action={
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setForm(EMPTY_FORM);
+                    setStatus("idle");
+                  }}
+                >
+                  Submit another request
+                </Button>
+              }
+            />
           </div>
         ) : (
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-border bg-surface p-6 sm:p-8">

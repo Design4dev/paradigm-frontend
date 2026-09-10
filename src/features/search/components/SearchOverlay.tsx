@@ -100,7 +100,7 @@ export function SearchOverlay() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search Transit vans, RAV4, Hamilton…"
-              className="text-heading-m h-12 flex-1 bg-transparent text-primary-black placeholder:text-dark-neutral/30 focus:outline-none"
+              className="focus-ring text-heading-m h-12 flex-1 rounded-[var(--radius-control)] bg-transparent text-primary-black placeholder:text-dark-neutral/30"
             />
             <IconButton aria-label="Close search" onClick={closeSearch}>
               <CloseIcon className="h-6 w-6" />

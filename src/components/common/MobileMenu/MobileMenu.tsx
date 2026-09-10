@@ -53,12 +53,14 @@ export function MobileMenu({ isOpen, onClose, navItems, returnFocusRef }: Mobile
                     href={item.href}
                     onClick={onClose}
                     aria-current={isActive ? "page" : undefined}
+                    {...(item.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     className={cn(
                       "focus-ring text-heading-m block rounded-[var(--radius-control)] px-3 py-3 text-primary-black hover:bg-soft-gray",
                       isActive && "text-primary-red"
                     )}
                   >
                     {item.label}
+                    {item.newTab && <span className="sr-only"> (opens in a new tab)</span>}
                   </Link>
                 </li>
               );

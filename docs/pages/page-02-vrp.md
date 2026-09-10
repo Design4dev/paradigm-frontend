@@ -60,10 +60,10 @@ now shared with the Homepage's search/advanced-search handoff rather than living
   supports many pages; there's just honestly not that much mock data to page through yet
   (page-02-vrp.md §27 — don't invent inventory).
 - **Category-strip icons**: every category shares one generic vehicle glyph (label carries the
-  distinction) except "Specialty Vehicles," which reuses the existing star icon. Raster icons are
-  the only allowed format in this project (no SVG anywhere — see the README) and hand-drawing 7
-  distinct, high-fidelity vehicle-silhouette icons was judged disproportionate to this component's
-  importance; the category label text is the primary identifier either way.
+  distinction) except "Specialty Vehicles," which reuses the existing star icon. Icons are inline
+  SVG components (`design.md` §2 — corrected 2026-09, this used to say "raster only") and
+  hand-drawing 7 distinct, high-fidelity vehicle-silhouette icons was judged disproportionate to
+  this component's importance; the category label text is the primary identifier either way.
 - **Categories with no matching mock inventory** ("Service Trucks", "Refrigerated", "Specialty
   Vehicles") are real, clickable filters that honestly return the empty state today rather than
   being removed or faked — they'll resolve the moment matching inventory exists.

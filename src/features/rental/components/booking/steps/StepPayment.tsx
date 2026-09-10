@@ -19,6 +19,14 @@ import { useState } from "react";
  *
  * Terms acceptance lives here (not a separate step — the spec's 5-stage
  * list doesn't include one) as the final gate before submitting.
+ *
+ * Spacing (Payment/Confirmation refinement pass): the fieldset uses one
+ * consistent `gap-5` (20px) for both "heading → first field" and
+ * "between fields," since 20px satisfies both recommended ranges at once
+ * rather than needing two different gap values. The legend is styled as a
+ * distinct section heading (uppercase, muted) so it reads as a heading
+ * rather than another field label — `Input`'s own label is solid black,
+ * sentence case, never uppercase.
  */
 export function StepPayment({ onBack, onSubmitBooking, submitting }: { onBack: () => void; onSubmitBooking: () => void; submitting: boolean }) {
   const termsAccepted = useRentalBookingStore((s) => s.termsAccepted);
@@ -66,11 +74,11 @@ export function StepPayment({ onBack, onSubmitBooking, submitting }: { onBack: (
         </p>
       </div>
 
-      <fieldset className="flex flex-col gap-4" disabled={status === "not_configured"}>
-        <legend className="text-label-m text-primary-black">Payment Method — Credit/Debit Card</legend>
+      <fieldset className="flex flex-col gap-5" disabled={status === "not_configured"}>
+        <legend className="text-label-m uppercase tracking-wide text-dark-neutral/55">Payment Method — Credit/Debit Card</legend>
         <Input label="Cardholder Name" autoComplete="cc-name" value={cardholder} onChange={(e) => setCardholder(e.target.value)} />
         <Input label="Card Number" inputMode="numeric" autoComplete="cc-number" placeholder="•••• •••• •••• ••••" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 items-start gap-5">
           <Input label="Expiry (MM/YY)" autoComplete="cc-exp" placeholder="MM/YY" value={expiry} onChange={(e) => setExpiry(e.target.value)} />
           <Input label="CVC" inputMode="numeric" autoComplete="cc-csc" placeholder="•••" value={cvc} onChange={(e) => setCvc(e.target.value)} />
         </div>
@@ -86,7 +94,7 @@ export function StepPayment({ onBack, onSubmitBooking, submitting }: { onBack: (
         </div>
       )}
 
-      <div className="border-t border-border pt-5">
+      <div className="border-t border-border pt-6">
         <Checkbox
           label="I have read and agree to the rental terms & conditions."
           checked={termsAccepted}

@@ -1,0 +1,56 @@
+/**
+ * One-shot confirmation success animation (booking confirmation refinement
+ * pass) — a quick circle scale-in, the checkmark appearing inside it, and a
+ * very subtle expanding ring behind it. Timeline: ring 80ms→730ms, circle
+ * 0ms→320ms, check 260ms→520ms — the whole sequence settles around 700ms,
+ * within the "quick and professional, 500-800ms" range.
+ *
+ * These classes are only ever added to the DOM by `SuccessIcon` when
+ * `useReducedMotion()` is false, so under prefers-reduced-motion the icon
+ * simply renders in its final state with no animation and no extra media
+ * query needed here.
+ */
+@keyframes rental-success-circle {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rental-success-check {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rental-success-ring {
+  from {
+    transform: scale(0.8);
+    opacity: 0.35;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.rental-success-circle {
+  animation: rental-success-circle 320ms var(--ease-out-standard) both;
+}
+
+.rental-success-check {
+  animation: rental-success-check 260ms var(--ease-out-standard) 260ms both;
+}
+
+.rental-success-ring {
+  animation: rental-success-ring 650ms var(--ease-out-standard) 80ms both;
+}

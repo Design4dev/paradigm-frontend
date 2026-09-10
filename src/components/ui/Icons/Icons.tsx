@@ -45,7 +45,6 @@ import {
   Upload,
   User,
   Users,
-  Volume2,
   Wrench,
   X,
   XCircle,
@@ -118,7 +117,6 @@ export const LockIcon = icon(Lock);
 export const LicenseIcon = icon(IdCard);
 export const ExtrasIcon = icon(Package);
 export const ReviewIcon = icon(ListChecks);
-export const SpeakerIcon = icon(Volume2);
 
 /**
  * Social brand marks — `lucide-react` dropped its brand-icon set some

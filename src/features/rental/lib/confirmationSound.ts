@@ -25,9 +25,10 @@ function getContext(): AudioContext | null {
 
 /**
  * Best-effort: browsers that block audio without a fresh user gesture will
- * silently fail to resume/start. Callers must not depend on this
- * succeeding — always pair it with a manual, user-triggered control (see
- * `ConfirmationSoundControl`).
+ * silently fail to resume/start. There is deliberately no manual/replay
+ * control for this (booking confirmation refinement pass — the sound
+ * should never interrupt the user or need a visible control); see
+ * `ConfirmationSound` for the single autoplay-once call site.
  */
 export async function playConfirmationChime(): Promise<boolean> {
   const ctx = getContext();
